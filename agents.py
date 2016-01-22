@@ -10,28 +10,32 @@ class Agent():
 		self.x = randint(0,600)
 		self.y = randint(0,600)
 		self.color = [randint(0,255) for x in range(3)]
-		self.life = 10000.0+randint(0,10000)
+		#self.life = 10000.0+randint(0,10000)
+		self.life = 100+randint(0,100)
 		self.state = "alive"
 		self.x_dir = choice(['left','right'])
 		self.y_dir = choice(['left','right'])
 		self.speed = 1
-		self.json_data = {"name":name,
-			"gender":gender,
-			"fitness":self.fitness,
-			"x":self.x, "y":self.y,
-			"color":self.color,
-			"life":self.life,
-			"state":self.state} 
-	
+		self.goals = {}
+		self.json_data = {}
+
 	def reset(self):
 		self.fitness = 0
 		from random import randint
 		self.life = 100000.0+randint(0,10000)
 		self.state = "alive"
-	
+
 	def saveJSON(self):
 		import json
-		self.json_data["fitness"] = self.fitness
+		self.json_data = {"name":   self.name,
+						"gender":   self.gender,
+						"fitness":  self.fitness,
+						"x":        self.x,
+						"y":        self.y,
+						"color":    self.color,
+						"life":     self.life,
+						"state":    self.state,
+						"goals":    self.goals}
 		with open("agents/"+self.name, "w") as outfile:
 			json.dump(self.json_data, outfile)
 
@@ -45,11 +49,11 @@ class Agent():
 		else:
 			if self.x > 0:
 				self.x -= self.speed
-			else:	
+			else:
 				self.x_dir = 'right'
 				self.x += self.speed
 		if self.y_dir == 'up':
-			if self.y < 600:	
+			if self.y < 600:
 				self.y += self.speed
 			else:
 				self.y_dir = 'down'

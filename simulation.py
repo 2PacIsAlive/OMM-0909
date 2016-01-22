@@ -3,9 +3,10 @@
 import json
 import click
 import random
+from goals import Goals
 from agents import Agent
 from neural_network import Neuron, NeuralNetwork
-#from pyprocessing import *
+from pyprocessing import *
 
 import sys
 sys.setrecursionlimit(10000)
@@ -22,11 +23,13 @@ class Simulation():
 		self.female_names = []
 		self.food_x = []
 		self.food_y = []
+		self.food_size = 0
+		self.running = True
 
 	def makeAgents(self,n):
 		with open("male_names.txt","r") as m:
 			m = m.readlines()
-			self.male_names = [x.replace('\n','') for x in m]	
+			self.male_names = [x.replace('\n','') for x in m]
 		with open("female_names.txt","r") as f:
 			f = f.readlines()
 			self.female_names = [x.replace('\n','') for x in f]
@@ -42,17 +45,18 @@ class Simulation():
 				name = random.choice(self.male_names)
 				agent = Agent(name,"male",net)
 				self.male_names.remove(name)
+			self.agent.goals = Goals()
 			self.agents.append(agent)
-	
+
 	def growFood(self):
 		food_x = random.randint(0,500)
 		food_y = random.randint(0,500)
-		food_size = random.randint(50,100)
-		self.food_x = [x for x in range(food_x, food_x+food_size)] + self.food_x #add on to existing food matrix	
-		self.food_y = [x for x in range(food_y, food_y+food_size)] + self.food_y
+		self.food_size = random.randint(50,100)
+		self.food_x = [x for x in range(food_x, food_x+self.food_size)] + self.food_x #add on to existing food matrix
+		self.food_y = [x for x in range(food_y, food_y+self.food_size)] + self.food_y
 
 	def combine(self,m,f):
-		print "combining", m.name, "with", f.name	
+		print "combining", m.name, "with", f.name
 		#change all this stuff
 		m.reset()
 		m.name = random.choice(self.male_names)
@@ -80,11 +84,13 @@ class Simulation():
 			agent.move()
 			if agent.x in self.food_x and agent.y in self.food_y:
 				agent.state = "eating"
+				print "food eaten"
 				agent.life += 10000
 				self.food_x.remove(agent.x)
 				self.food_y.remove(agent.y)
 			agent.fitness += 1
-			agent.life -= .01
+			#agent.life -= .01
+			agent.life -= 1
 			if agent.life <= 0:
 				agent.state = "dead"
 				print agent.name, "died."
@@ -101,20 +107,42 @@ class Simulation():
 			with click.progressbar(self.agents,label="saving agents...") as bar:
 				for agent in bar:
 					agent.saveJSON()
-			print "agents saved." 
+			print "agents saved."
 		return True
+
+def setup():
+	size(600,600)
+	rectMode(CENTER)
+
+def draw():
+	#background(0)
+	for agent in sim.agents:
+		fill(agent.color[0],agent.color[1],agent.color[2])
+		rect(agent.x,agent.y,10,10)
+	for food_x in sim.food_x:
+		for food_y in sim.food_y:
+			fill(30,50,120)
+			rect(food_x,food_y,10,10)
+	sim.running = sim.runSim()
+
+
+#sim = Simulation()
+#sim.makeAgents(10)
+#sim.growFood()
+#run()
 
 def main():
 	#run()
-	sim = Simulation()
 	sim.makeAgents(10)
 	sim.growFood()
-	running = True
-	while running:
-		try:
-			running = sim.runSim()
-		except KeyboardInterrupt:
-			running = sim.pause()
+	run()
+	#running = True
+	#while running:
+	#	try:
+	#		running = sim.runSim()
+	#	except KeyboardInterrupt:
+	#		running = sim.pause()
 
 if __name__=="__main__":
+	sim = Simulation()
 	main()

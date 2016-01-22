@@ -4,11 +4,11 @@ class Goals():
 	def __init__(self):
 		import glob
 		import json
-		self.goals = []
-		for goal in glob.glob("goals/*"):
+		self.global_goals = []
+		for goal in glob.glob("goals/global/*"):
 			with open(goal, "r") as f:
 				data = json.load(f)
-				self.goals.append(data)
+				self.global_goals.append(data)
 		print self.goals
 
 	def addGoal(self):
