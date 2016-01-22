@@ -24,6 +24,25 @@ Why = np.random.randn(vocab_size, hidden_size)*0.01 # hidden to output
 bh = np.zeros((hidden_size, 1)) # hidden bias
 by = np.zeros((vocab_size, 1)) # output bias
 
+def saveParams():
+	with open('parameters/Wxh', 'w') as Wxh_file:
+		np.save(Wxh_file, Wxh)
+	with open('parameters/Whh', 'w') as Whh_file:
+		np.save(Whh_file, Whh)
+  	with open('parameters/Why', 'w') as Why_file:
+		np.save(Why_file, Why)
+	with open('parameters/bh', 'w')  as bh_file:
+		np.save(bh_file, bh)
+	with open('parameters/by', 'w')  as by_file:
+		np.save(by_file, by)
+
+def loadParams():
+	Wxh = np.load('parameters/Wxh')
+	Whh = np.load('parameters/Whh')
+	Why = np.load('parameters/Why')
+	bh = np.load('parameters/bh')
+	by = np.load('parameters/by')
+
 def lossFun(inputs, targets, hprev):
   """
   inputs,targets are both list of integers.
@@ -83,30 +102,34 @@ mWxh, mWhh, mWhy = np.zeros_like(Wxh), np.zeros_like(Whh), np.zeros_like(Why)
 mbh, mby = np.zeros_like(bh), np.zeros_like(by) # memory variables for Adagrad
 smooth_loss = -np.log(1.0/vocab_size)*seq_length # loss at iteration 0
 while True:
-  # prepare inputs (we're sweeping from left to right in steps seq_length long)
-  if p+seq_length+1 >= len(data) or n == 0: 
-    hprev = np.zeros((hidden_size,1)) # reset RNN memory
-    p = 0 # go from start of data
-  inputs = [char_to_ix[ch] for ch in data[p:p+seq_length]]
-  targets = [char_to_ix[ch] for ch in data[p+1:p+seq_length+1]]
+	try:  
+		# prepare inputs (we're sweeping from left to right in steps seq_length long)
+		if p+seq_length+1 >= len(data) or n == 0: 
+	  		hprev = np.zeros((hidden_size,1)) # reset RNN memory
+	    	p = 0 # go from start of data
+	  	inputs = [char_to_ix[ch] for ch in data[p:p+seq_length]]
+	  	targets = [char_to_ix[ch] for ch in data[p+1:p+seq_length+1]]
 
-  # sample from the model now and then
-  if n % 100 == 0:
-    sample_ix = sample(hprev, inputs[0], 200)
-    txt = ''.join(ix_to_char[ix] for ix in sample_ix)
-    print '----\n %s \n----' % (txt, )
+	  	# sample from the model now and then
+	  	if n % 100 == 0:
+			sample_ix = sample(hprev, inputs[0], 200)
+	    	txt = ''.join(ix_to_char[ix] for ix in sample_ix)
+	    	print '----\n %s \n----' % (txt, )
 
-  # forward seq_length characters through the net and fetch gradient
-  loss, dWxh, dWhh, dWhy, dbh, dby, hprev = lossFun(inputs, targets, hprev)
-  smooth_loss = smooth_loss * 0.999 + loss * 0.001
-  if n % 100 == 0: print 'iter %d, loss: %f' % (n, smooth_loss) # print progress
-  
-  # perform parameter update with Adagrad
-  for param, dparam, mem in zip([Wxh, Whh, Why, bh, by], 
-                                [dWxh, dWhh, dWhy, dbh, dby], 
-                                [mWxh, mWhh, mWhy, mbh, mby]): # 
-    mem += dparam * dparam
-    param += -learning_rate * dparam / np.sqrt(mem + 1e-8) # adagrad update
+	  	# forward seq_length characters through the net and fetch gradient
+	  	loss, dWxh, dWhh, dWhy, dbh, dby, hprev = lossFun(inputs, targets, hprev)
+	  	smooth_loss = smooth_loss * 0.999 + loss * 0.001
+	  	if n % 100 == 0: print 'iter %d, loss: %f' % (n, smooth_loss) # print progress
+	  
+	  	# perform parameter update with Adagrad
+	  	for param, dparam, mem in zip([Wxh, Whh, Why, bh, by], 
+	                                [dWxh, dWhh, dWhy, dbh, dby], 
+	                                [mWxh, mWhh, mWhy, mbh, mby]): # 
+			mem += dparam * dparam
+	    	param += -learning_rate * dparam / np.sqrt(mem + 1e-8) # adagrad update
 
-  p += seq_length # move data pointer
-  n += 1 # iteration counter 
+	  	p += seq_length # move data pointer
+	  	n += 1 # iteration counter 
+	
+	except KeyboardInterrupt:
+		saveParams()
