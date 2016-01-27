@@ -1,0 +1,5725 @@
+/* This is a simple bus reservation software which is for biginners.
+   It is only to guide biginners. Here I have shown the use of arrays
+   and simple database management.
+*/
+//			This is made by Vipin Panicker.
+//			E-Mail: itsvipin@hotmail.com
+#include "conio.h"
+#include "stdio.h"
+#include "iostream.h"
+#include "string.h"
+#include "graphics.h"
+#include "stdlib.h"
+#include "dos.h"
+static int p=0;
+class a
+{
+		char busn[5],driver[10],arrival[5],depart[5],from[10],to[10],
+		seat[8][4][10];
+	public:
+		void install();
+		void allotment();
+		void empty();
+		void show();
+		void avail();
+		void position(int i);
+}bus[10];//here we declare the number of buses we can have.
+void vline(char ch)
+{
+	for (int i=80;i>0;i--)//Here i's value will depend on your computer.
+		cout<<ch;
+}
+void a::install()
+{
+	cout<<"Enter bus no: ";
+	cin>>bus[p].busn;
+	cout<<"\n Enter Driver's name: ";
+	cin>>bus[p].driver;
+	cout<<"\n Arrival time: ";
+	cin>>bus[p].arrival;
+	cout<<"\n Departure: ";
+	cin>>bus[p].depart;
+	cout<<"\n From: \t\t\t";
+	cin>>bus[p].from;
+	cout<<"\n To: \t\t\t";
+	cin>>bus[p].to;
+	bus[p].empty();
+	p++;
+}
+void a::allotment()
+{
+	int seat;
+	char number[5];
+	top:
+	cout<<"Bus no: ";
+	cin>>number;
+	int n;
+	for(n=0;n<=p;n++)
+	{
+		if(strcmp(bus[n].busn,number)==0)
+		break;
+	}
+	while(n<=p)
+	{
+		cout<<"\n Seat number: ";
+		cin>>seat;
+		if (seat>32)
+			{
+				cout<<"\n There are only 32 seats available in this bus.";
+			}
+		else
+			{
+			if (strcmp(bus[n].seat[seat/4][(seat%4)-1],"Empty")==0)
+				{
+					cout<<"Enter passanger's name: ";
+					cin>>bus[n].seat[seat/4][(seat%4)-1];
+					break;
+				}
+			else
+				cout<<"The seat no. is already reserved.\n";
+			}
+	}
+	if (n>p)
+	{
+		cout<<"Enter correct bus no.\n";
+		goto top;
+	}
+}
+void a::empty()
+{
+	for(int i=0;i<8;i++)
+	{
+		for(int j=0;j<4;j++)
+		{
+			strcpy(bus[p].seat[i][j],"Empty");
+		}
+	}
+}
+void a::show()
+{
+	int n;
+	char number[5];
+	cout<<"Enter bus no: ";
+	cin>>number;
+	for(n=0;n<=p;n++)
+	{
+		if(strcmp(bus[n].busn,number)==0)
+			break;
+	}
+	while (n<=p)
+	{
+		vline('*');
+		cout<<" Bus no: \t"<<bus[n].busn
+		<<"\n Driver: \t"<<bus[n].driver<<"\t\t Arrival time:\t"
+		<<bus[n].arrival<<"\t Departure time:\t"<<bus[n].depart
+		<<"\n From:\t\t"<<bus[n].from<<"\t\t To: \t\t\t"<<
+		bus[n].to<<"\n";
+		vline('*');
+		bus[0].position(n);
+		int a=1;
+		for (int i=0;i<8;i++)
+		{
+			for(int j=0;j<4;j++)
+			{
+				a++;
+				if(strcmp(bus[n].seat[i][j],"Empty")!=0)
+					cout<<"\n The seat no "<<a-1<<" is reserved for "<<bus[n].seat[i][j]<<" .";
+			}
+		}break;
+	}	if(n>p)
+			cout<<"enter correct bus no.";
+}
+void a::position(int l)
+{
+	int s=0,p=0;
+	for(int i=0;i<8;i++)
+	{
+		cout<<"\n";
+		for(int j=0;j<4;j++)
+		{
+			s++;
+			if(strcmp(bus[l].seat[i][j],"Empty")==0)
+				{
+					cout.width(5);
+					cout.fill(' ');
+					cout<<s<<".";
+					cout.width(10);
+					cout.fill(' ');
+					cout<<bus[l].seat[i][j];
+					p++;
+				}
+			else
+				{
+					cout.width(5);
+					cout.fill(' ');
+					cout<<s<<".";
+					cout.width(10);
+					cout.fill(' ');
+					cout<<bus[l].seat[i][j];
+				}
+		}
+	}
+		cout<<"\n\n There are "<<p<<" seats empty in Bus No: "<<bus[l].busn;
+}
+void a::avail()
+{
+	for(int n=0;n<p;n++)
+	{
+		vline('*');
+		cout<<"Bus no: \t"<<bus[n].busn<<"\nDriver: \t"<<bus[n].driver<<"\t\tArrival time:\t"<<bus[n].arrival<<"\tDeparture Time: \t"<<bus[n].depart<<"\n From: \t\t"<<bus[n].from<<"\t\t To: \t\t\t"<<bus[n].to<<"\n";
+		vline('*');
+		vline('_');
+	}
+}
+void main()
+{
+	clrscr();
+	int w;
+	int gd=DETECT,gm;
+	initgraph(&gd,&gm,"d:\\tc\\bgi");//enter the path of ur c compiler where u installed it.
+	setbkcolor(GREEN);
+	while(1)
+	{
+		cout<<"\n\n\n\n";
+		cout<<"\t\t\t 1.Install\n\t\t\t 2.Reservation\n\t\t\t 3.Show \n\t\t\t 4.Buses Available. \n\t\t\t 5.Exit";
+		cout<<"\n\t\t\t Enter your choice:-> ";
+		cin>>w;
+		switch(w)
+		{
+			case 1:
+			bus[p].install();
+			break;
+			case 2:
+			bus[p].allotment();
+			break;
+			case 3:
+			bus[0].show();
+			break;
+			case 4:
+			bus[0].avail();
+			break;
+			case 5:
+			exit(0);
+		}
+	}
+}
+
+
+//Necessary Includes
+#include <waveplay.cpp>
+#include <dos.h>
+#include <iostream.h>
+#include <math.h>
+#include <mem.h>
+#include <stdio.h>
+#include <alloc.h>
+#include <stdlib.h>
+#include <conio.h>
+#define VRETRACE            0x08
+#define INPUT_STATUS        0x03da
+#define SCREEN_WIDTH 320
+#define SVGA 0x13
+#define TEXT 0x03
+#define SET_MODE 0x00
+#define VIDEO_INT 0x10
+#define sgn(x) ((x<0)?-1:((x>0)?1:0))
+//Necessary declarations
+typedef unsigned short word;
+typedef unsigned char  byte;
+byte far *VGA = (byte far*)0xA0000000L;        /* this points to video memory. */
+typedef long     fixed16_16;
+typedef unsigned long  dword;
+static fixed16_16 SIN_ACOS[1024];
+int palorig[256][3];
+//FUNCTION DECLARATIONS
+void fillrect(int topx, int topy, int bottomx, int bottomy, int color);
+byte Get_Pixel(unsigned x, unsigned y);
+void fpixel(int x, int y, int color);
+void wait_for_retrace(void);
+void set_mode(byte mode);
+void SetPalEntry(unsigned char entry, int red, int green, int blue);
+void SavePal(void);
+void line(int x1, int y1, int x2, int y2, int color);
+void rectangle(int left,int top, int right, int bottom, int color);
+void GetPal(unsigned char ColorNo, int &R,
+	    int &G,      int &B);
+void FadeIn(int pause);
+void FadeOut(int pause = 0);
+void setup(void);
+void circle(int x,int y, int radius, int color);
+void fillcircle(int x,int y, int radius, int color);
+void ClearPal(void);
+void setup()
+{
+int i;
+for(i=0;i<1024;i++)                 /* create the sin(arccos(x)) table. */
+  {
+    SIN_ACOS[i]=sin(acos((float)i/1024))*0x10000L;
+  }
+}
+void fpixel(int x,int y,int color)
+{
+  VGA[y*SCREEN_WIDTH+x]=color;
+}
+void set_mode(byte mode)
+{
+  union REGS regs;
+  regs.h.ah = SET_MODE;
+  regs.h.al = mode;
+  int86(VIDEO_INT, &regs, &regs);
+}
+void line(int x1, int y1, int x2, int y2, int color)
+{
+  int i,dx,dy,sdx,sdy,dxabs,dyabs,x,y,px,py;
+  dx=x2-x1;      /* the horizontal distance of the line */
+  dy=y2-y1;      /* the vertical distance of the line */
+  dxabs=abs(dx);
+  dyabs=abs(dy);
+  sdx=sgn(dx);
+  sdy=sgn(dy);
+  x=dyabs>>1;
+  y=dxabs>>1;
+  px=x1;
+  py=y1;
+  VGA[(py<<8)+(py<<6)+px]=color;
+  if (dxabs>=dyabs) /* the line is more horizontal than vertical */
+  {
+    for(i=0;i<dxabs;i++)
+    {
+      y+=dyabs;
+      if (y>=dxabs)
+      {
+        y-=dxabs;
+        py+=sdy;
+      }
+      px+=sdx;
+      fpixel(px,py,color);
+    }
+  }
+  else /* the line is more vertical than horizontal */
+  {
+    for(i=0;i<dyabs;i++)
+    {
+      x+=dxabs;
+      if (x>=dyabs)
+      {
+        x-=dyabs;
+        px+=sdx;
+      }
+      py+=sdy;
+      fpixel(px,py,color);
+    }
+  }
+}
+void rectangle(int left,int top, int right, int bottom, int color)
+{
+  line(left, top, right, top, color);
+line(left, top, left, bottom, color);
+line(right, top, right, bottom, color);
+line(left, bottom, right, bottom, color);
+}
+void circle(int x,int y, int radius, int color)
+{
+  fixed16_16 n=0,invradius=(1/(float)radius)*0x10000L;
+  int dx=0,dy=radius-1;
+  word dxoffset,dyoffset,offset = (y<<8)+(y<<6)+x;
+  while (dx<=dy)
+  {
+    dxoffset = (dx<<8) + (dx<<6);
+    dyoffset = (dy<<8) + (dy<<6);
+    VGA[offset+dy-dxoffset] = color;  /* octant 0 */
+    VGA[offset+dx-dyoffset] = color;  /* octant 1 */
+    VGA[offset-dx-dyoffset] = color;  /* octant 2 */
+    VGA[offset-dy-dxoffset] = color;  /* octant 3 */
+    VGA[offset-dy+dxoffset] = color;  /* octant 4 */
+    VGA[offset-dx+dyoffset] = color;  /* octant 5 */
+    VGA[offset+dx+dyoffset] = color;  /* octant 6 */
+    VGA[offset+dy+dxoffset] = color;  /* octant 7 */
+    dx++;
+    n+=invradius;
+    dy = (radius * SIN_ACOS[n>>6]) >>16;
+  }
+}
+void GetPal(unsigned char ColorNo, int &R,
+	    int &G,      int &B) {
+  outp (0x03C7,ColorNo); // here is the pallette color I want read
+  R = inp (0x03C9);
+  G = inp (0x03C9);
+  B = inp (0x03C9);
+}
+void SetPalEntry(unsigned char entry, int red, int green, int blue)
+  {
+    // tell the VGA card which register we will be writing
+    outportb(0x3C8, entry);
+    outportb(0x3C9, red);
+    outportb(0x3C9, green);
+    outportb(0x3C9, blue);
+  }
+void ClearPal()
+{
+    int entry;
+    for (entry = 0; entry < 256; entry++)
+    {
+      SetPalEntry(entry, 0, 0, 0);
+    }
+  }
+  void wait_for_retrace(void)
+{
+    /* wait until done with vertical retrace */
+    while  ((inp(INPUT_STATUS) & VRETRACE));
+    /* wait until done refreshing */
+    while (!(inp(INPUT_STATUS) & VRETRACE));
+}
+  void FadeIn(int pause)
+  {
+    int intensity, entry, red, green, blue;
+    for (intensity = 0; intensity < 64; intensity++)
+    {
+      //wait_for_retrace();
+      for (entry = 0; entry < 256; entry++)
+      {
+	red   = palorig[entry][0] * intensity / 63;
+        green = palorig[entry][1] * intensity / 63;
+        blue  = palorig[entry][2] * intensity / 63;
+        SetPalEntry(entry, red, green, blue);
+      }
+      // use this one if you feel it's all to fast for you
+      delay(pause);
+    }
+  }
+  void FadeOut(int pause)
+  {
+    int intensity, entry, red, green, blue;
+    for (intensity = 63; intensity >= 0; intensity--)
+    {
+      wait_for_retrace();
+      for (entry = 0; entry < 256; entry++)
+      {
+        red   = palorig[entry][0] * intensity / 63;
+        green = palorig[entry][1] * intensity / 63;
+	blue  = palorig[entry][2] * intensity / 63;
+	SetPalEntry(entry, red, green, blue);
+      }
+      // use this one if you feel it's all to fast for you
+      delay(pause);
+    }
+  }
+void fillrect(int topx, int topy, int bottomx, int bottomy, int color)
+{
+	int a;
+	rectangle(topx, topy, bottomx, bottomy, color);
+	do
+	{
+	rectangle(topx++, topy, bottomx, bottomy, color);
+        }
+	while(topx!=bottomx);
+	rectangle(topx++, topy, bottomx, bottomy, color);
+}
+void SavePal()
+{
+int red, green, blue,a;
+for(a=0; a<256; a++)
+{
+GetPal(a, red, green, blue);
+palorig[a][0]=red;
+palorig[a][1]=green;
+palorig[a][2]=blue;
+}
+}
+
+//**************************************
+// Name: Code Example - Simple Mad Libs
+// Description:This is some examples of basic C++ programming. Some people at school will be creating software using some of these concepts. So if someone happens to wander over here, theres some help.
+However this wont solve your problems just show you how.
+// By: Jared Bruni
+//
+//
+// Inputs:None
+//
+// Returns:None
+//
+//Assumes:None
+//
+//Side Effects:None
+//This code is copyrighted and has limited warranties.
+//**************************************
+// jared bruni
+// for planetsourcecode
+/*
+This is some examples of basic C++ programming. Some people at school will be creating software using some of these concepts. So if someone happens to wander over here, theres some help.
+However this wont solve your problems just show you how.
+*/
+#include <iostream.h>
+#include <string.h>
+#include <stdlib.h>
+// C++ code example
+// example simple mad libs
+struct StringData 
+    {
+    	char string[100];
+};
+void main()
+    {
+    	cout << "\n********** Mad Libs Example **********\n";
+    	cout << "\nEnter 10 Variables\n";
+    	StringData data[10];
+    	for(int i = 0; i <= 9; i++)
+        	{
+        		cout << "\n enter variable #" << i << ":";
+        		cin >> data[i].string;
+        	}
+        	cout << "\n********** Your Result ******************\n";
+        	cout << "\n some guy was walking down the street when: " << data[0].string << " came along\n";
+        	cout << "\n then this little: " << data[1].string << " started screaming " << endl;
+        	cout << "\n what happend to this, point were did it go? : " << data[2].string << endl;
+        	cout << "\n how many times must I tell you this: " << data[3].string << endl;
+        	cout << "\n my mind speaks of this: " << data[4].string << endl;
+        	cout << "\n this is a story of a boy named .." << data[5].string << endl;
+        	cout << "\n low and below, there it was..." << data[6].string << endl;
+        	cout << "\n and so we kept on saying this: " << data[7].string << endl;
+        	cout << "\n this is a spew of nonsense: " << data[8].string << endl;
+        
+        	cout << "\n bye!";
+        	system("pause");
+    }
+		
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+int main()
+{
+  int choice;
+  int mhp, hp, i, init, atk, def, matk, mdef, hurt, mhurt, agi, magi;
+  atk = 10;
+  def = 15;
+  agi = 5;
+  matk = 10;
+  mdef = 15;
+  magi = 5;
+  
+  srand((unsigned)time(0));
+  init = rand()%2+1;
+  mhp = rand()%50 + 60;
+  hp = rand()%20 + 80;
+  if (init == 1) {
+  cout<<"You start.\n";
+  while (hp > 0 || mhp > 0) {
+    cout<<"What do you want to do?\n1 - Fierce Attack\n2 - Lithe Attack\n3 - Defensive moves\n";
+     do{cin>>choice;}while(choice>3 || choice<1);
+    switch (choice) {
+      case 1:
+        atk = rand()%20+10;
+	def = rand()%10+10;
+	agi = rand()%5;
+	break;
+      case 2:
+        atk = rand()%5+10;
+	def = rand()%10+10;
+	agi = rand()%15;
+        break;
+      case 3:
+        atk = rand()%10+10;
+	def = rand()%20+10;
+	agi = rand()%5;
+	break;
+	}
+    choice = rand()%3;
+    switch (choice) {
+      case 1:
+        matk = rand()%20+10;
+	mdef = rand()%10+10;
+	magi = rand()%5;
+	break;
+      case 2:
+        matk = rand()%5+10;
+	mdef = rand()%10+10;
+	magi = rand()%15;
+        break;
+      case 3:
+        matk = rand()%10+10;
+	mdef = rand()%20+10;
+	magi = rand()%5;
+	break;
+	}
+
+//HÃ¤r dÃ¶r folk o sÃ¥nt
+    mhurt = (atk - magi) - (mdef/atk);
+    if (mhurt < 0) {
+      mhurt = 0;
+    }
+    mhp = mhp - mhurt;
+    cout<<"You did "<<mhurt<<" damage to the monster!\n";
+    cin.get();
+//Specielt hÃ¤r
+    if (mhp < 1) {
+      cout<<"You killed the beast!! You won with "<<hp<<" hp left.\n";
+      cin.get();
+      return 0;
+      }
+    cout<<"The monster now have "<<mhp<<" hp left.\n";
+    hurt = (matk - agi) - (def/matk);
+    if (hurt < 0) {
+      hurt = 0;
+    }
+    hp = hp - hurt;
+    cout<<"The monster hit you for "<<hurt<<" damage.\n";
+//Och hÃ¤r.
+    if (hp < 1) {
+      cout<<"You died. The beast still has "<<mhp<<" hp left.\n";
+      cin.get();
+      return 0;
+      }
+cout<<"You now have "<<hp<<" hp left.\n\n";
+     }
+     }
+
+//Om monstret startar.
+  else {
+  cout<<"Monster start.\n";
+    while (hp > 0 || mhp > 0) {
+    choice = rand()%3;
+    switch (choice) {
+      case 1:
+        matk = rand()%20+10;
+	mdef = rand()%10+10;
+	magi = rand()%5;
+	break;
+      case 2:
+        matk = rand()%5+10;
+	mdef = rand()%10+10;
+	magi = rand()%15;
+        break;
+      case 3:
+        matk = rand()%10+10;
+	mdef = rand()%20+10;
+	magi = rand()%5;
+	break;
+	}
+//Monstret bÃ¶rjar!! han slÃ¥r till direkt.
+    hurt = (matk - agi) - (def/matk);
+    if (hurt < 0) {
+      hurt = 0;
+    }
+    hp = hp - hurt;
+    cout<<"The monster hit you for "<<hurt<<" damage.\n";
+//Oooooh, gotta hurt!
+    if (hp < 1) {
+      cout<<"You died. The beast still has "<<mhp<<" hp left.\n";
+      cin.get();
+      return 0;
+      }
+ cout<<"You now have "<<hp<<" hp left.\n\n";
+    cout<<"What do you want to do?\n1 - Fierce Attack\n2 - Lithe Attack\n3 - Defensive moves\n";
+     do{cin>>choice;}while(choice>3 || choice<1);
+    switch (choice) {
+      case 1:
+        atk = rand()%20+10;
+	def = rand()%10+10;
+	agi = rand()%5;
+	break;
+      case 2:
+        atk = rand()%5+10;
+	def = rand()%10+10;
+	agi = rand()%15;
+        break;
+      case 3:
+        atk = rand()%10+10;
+	def = rand()%20+10;
+	agi = rand()%5;
+	break;
+        }
+
+
+//HÃ¤r kan han dÃ¶.
+    mhurt = (atk - magi) - (mdef/atk);
+    if (mhurt < 0) {
+      mhurt = 0;
+    }
+    mhp = mhp - mhurt;
+    cout<<"You did "<<mhurt<<" damage to the monster!\n";
+    cin.get();
+//Eller typ hÃ¤r:
+    if (mhp < 1) {
+      cout<<"You killed the beast!! You won with "<<hp<<" hp left.\n";
+      cin.get();
+      return 0;
+      }
+    cout<<"The monster now have "<<mhp<<" hp left.\n";
+  } } }
+
+/* Slot Machine Program by Joe Tchamitchian*/ 
+#include <iostream.h>
+#include <stdlib.h>
+#include <time.h>
+int main()
+{
+	
+	int x,a, b, c, token=4;
+	srand(time(0));
+	
+	cout<<"\t********************************************************\n"
+	    <<"\t*              Welcome to slot machine.                *\n"
+		<<"\t*  Would you like to play? (1 to play, 2 not to play)  *\n"
+		<<"\t********************************************************\n\n";
+	cin>>x;
+	while(token!=0)
+	{cout<<"You have "<<token<< " tokens\n\n"
+	    <<"Pull? (1 to pull, 2 not to pull)\n\n";
+	cin>>x;
+	
+	
+	
+	
+	if(x==1)
+{	
+	
+	 a = 1+rand() %10;
+	 b = 1+rand() %10;
+	 c = 1+rand() %10;
+	
+	
+	cout<<"\t\t"<<a<<"          "<<b<<"          "<<c<<"\n\n";
+	
+}
+		else
+		cout<<"OK\n";
+		{		
+				
+		if(a==b==c)
+		{
+			
+			token+=4;
+			cout<<"You win\n\n";
+		}		
+		if(a==b || b==c || a==c)
+		{
+			token+=1;
+		
+		cout<<"You got two out of three\n\n";
+		
+		
+		}
+		else
+		{
+			token-=1;
+			
+		
+		cout<<"You loose\n\n";
+		}
+		
+		}
+	}
+		
+		
+				
+			return 0;
+}
+
+#include "iostream.h"
+#include "conio.h"
+#include "stdio.h"
+struct account
+{
+int no[10];
+char name[20];
+long int d,b,a;
+long double t;
+};
+void main()
+{
+window(27,2,53,4);
+textbackground(3);
+clrscr();
+textcolor(0);
+cprintf(" \n   BANK ACCOUNT SYSTEM");
+/*menu*/
+window(20,5,60,25);
+textbackground(13);
+clrscr();
+gotoxy(2,3);
+textcolor(10);
+cprintf("G");
+gotoxy(3,3);
+textcolor(14);
+cprintf("ive The Account No.");
+/*name of the account holder*/
+textcolor(10);
+gotoxy(2,5);
+cprintf("E");
+textcolor(14);
+gotoxy(3,5);
+cprintf("nter The Name ");
+/*balance*/
+textcolor(10);
+gotoxy(2,7);
+cprintf("A");
+textcolor(14);
+gotoxy(3,7);
+cprintf("mount");
+/*amount*/
+account i;
+/*input*/
+gotoxy(22,3);
+cin>>i.no[10];
+gotoxy(22,5);
+cin>>i.name;
+gotoxy(22,7);
+cin>>i.a;
+gotoxy(3,14);textcolor(11);
+cout<<"Name: "<<i.name;
+/*runtime calculations*/
+/*******************************for deposite*******************************/
+i.d=i.a+5;
+gotoxy(3,16);
+cout <<"The Deposite Is: "<<i.d;
+/****************************Tax Deduction ***********************************/
+i.t=700.8/i.d*100;
+gotoxy(3,18);
+cout <<"The deduced Tax is :"<<i.t;
+gotoxy(15,35);
+cout <<"%";
+/***************************For Balance**********************************/
+i.b=i.d-i.t;
+/********** object of the struct account********************/
+if (i.b>0 && i.a<=i.b)
+{
+	gotoxy(3,20);
+	cout <<"WITHDRAW THE BALANCE :"<<i.b;
+	}
+else
+     {
+       gotoxy(3,20);textcolor(11);
+	cprintf("Can't Withdraw Your Balance!!!");}
+getch();
+}
+
+#include<iostream>
+#include<string>
+using namespace std;
+class productSpecification{
+   int id;
+   float price;
+   string description;
+public:
+   void initializeInfo(int i,float p, string d);
+   int getItemID() {return id;}
+   float getPrice() {return price;}
+   string getDescription() {return description;}
+};
+void productSpecification::initializeInfo(int i, float p, string d){
+   id=i;
+   price=p;
+   description=d;
+}
+   
+class productCatalog{
+public:
+   void prodInfo();
+   void displayMenu();
+   void searchCatalog(int v);
+};
+void productCatalog::prodInfo(){
+   productSpecification obj[3];
+   int n;
+   
+   obj[0].initializeInfo(100, 24.95, "Enter the Dragon DVD");
+   obj[1].initializeInfo(200, 22.95, "Gladiator DVD");
+   
+   cout<<"Id: "<<obj[0].getItemID()<<endl;
+   cout<<"Price: "<<obj[0].getPrice()<<endl; 
+   cout<<"Description: "<<obj[0].getDescription()<<endl;   
+   cout<<'\n';
+   cout<<"Id: "<<obj[1].getItemID()<<endl;
+   cout<<"Price: "<<obj[1].getPrice()<<endl;
+   cout<<"Description: "<<obj[1].getDescription()<<endl; 
+}
+void productCatalog::displayMenu(int choice){
+   
+int main(){
+   productCatalog ob;
+   ob.prodInfo();
+ 
+   
+   
+   return 0;
+}
+
+//**************************************
+//     
+// Name: Code Example - how to use names
+//     paces
+// Description:Simple example showing ho
+//     w to use namespaces.
+// By: Jared Bruni
+//
+//This code is copyrighted and has// limited warranties.
+//**************************************
+//     
+/* Namespaces example
+written by Jared Bruni
+www.LostSideDead.com
+*/
+#include<iostream.h>
+#include <stdlib.h>
+namespace master 
+    {
+    	int variable = 100;
+    	void test1();
+    	void test2();
+}
+void master::test1()
+    {
+    	cout << " calling function #1 " << endl;
+}
+void master::test2()
+    {
+    	cout << " calling function #2 " << endl;
+    	cout << " the variable holds the value of : " << variable << endl;
+}
+using namespace master;
+int main()
+    {
+    	test1();
+    	test2();
+    	system("pause");
+    	return (0);
+}
+
+//**************************************
+// Name: Code Example - function overloading / polymorphisim
+// Description:A concept we went over today in class.
+// By: Jared Bruni
+//
+//
+// Inputs:None
+//
+// Returns:None
+//
+//Assumes:None
+//
+//Side Effects:None
+//**************************************
+/* example of function overloading/polymorphisim
+written by Jared Bruni
+www.LostSideDead.com
+*/
+#include <iostream>
+using namespace std;
+void func1(char* str);
+void func1(int val);
+int main()
+    {
+    	func1("character string passed\n");
+    	func1(123);
+    	return (system("pause"));
+}
+void func1(char* str)
+    {
+    	cout << "string value := " << str << endl;
+}
+void func1(int val)
+    {
+    	cout << "integer value := " << val << endl;
+}
+		
+//**************************************
+// Name: Code Example - generating random numbers
+// Description:Today in class we went over a few different concepts. I wrote my own
+examples of these C++ concepts.
+// By: Jared Bruni
+//
+//
+// Inputs:None
+//
+// Returns:None
+//
+//Assumes:None
+//
+//Side Effects:None
+//This code is copyrighted and has limited warranties.
+//**************************************
+/* random number example
+written by Jared Bruni
+www.LostSideDead.com
+*/
+#include<iostream>
+#include<time.h>
+using namespace std;
+int main()
+    {
+    	srand(time(NULL)); // seed randomization
+    	// now generate and display 10 random numbers 0-10
+    	for(int i = 0; i < 10; i++)
+        	{
+        		cout << "random number: " << rand()%10 << endl;
+        	}
+        	return system("pause");
+    }
+		
+//**************************************
+// Name: Code Example - A Recursive Function
+// Description:This is some examples of basic C++ programming. Some people at school will be creating software using some of these concepts. So if someone happens to wander over here, theres some help.
+However this wont solve your problems just show you how.
+// By: Jared Bruni
+//
+//
+// Inputs:None
+//
+// Returns:None
+//
+//Assumes:None
+//
+//Side Effects:None
+//**************************************
+// jared bruni
+// for planetsourcecode
+/*
+This is some examples of basic C++ programming. Some people at school will be creating software using some of these concepts. So if someone happens to wander over here, theres some help.
+However this wont solve your problems just show you how.
+*/
+#include <iostream.h>
+#include <string.h>
+#include <stdlib.h>
+// C++ code example
+// example how to use recursion
+void recurfunc(int start,int stop,char* buff);
+void main()
+    {
+    	cout << "enter how many times to loop: ";
+    	char buff[100];
+    	cin >> buff;
+    	int num;
+    	num = atoi(buff);
+    	if(num >= 1)
+        	{
+        		recurfunc(0,num," this is a recursive function");
+        	}
+        	else
+            	{
+            		cout << "sorry you didnt enter valid data" << endl;
+            		return;
+            	}
+        }
+        void recurfunc(int start,int stop,char* buff)
+            {
+            	if(start < stop)
+                	{
+                		start++;
+                		cout << "\n" << buff << "\n";
+                		recurfunc(start,stop,buff);
+                	}
+                	else
+                    	{
+                    		return;
+                    	}
+                }
+		
+//////////////////////////////////////////////////////////////////////////////////////////////
+// console gregorian calender app. 
+// (c) stoned coder 2001
+// uses zeller's algorithm for finding the day for the date
+//////////////////////////////////////////////////////////////////////////////////////////////
+// details of algorithm are :-
+//
+// [x] = floor (x)
+//
+// f=k+[((13*m)-1)/5]+d+[d/4]+[c/4]-(2*c)
+//
+// where k=day of the month
+//       m=month number march=1 jan=11 feb=12 etc.
+//       d=last two digits of year.... if m=1 or m=2 d=d-1 (jan,feb treated as previous year)
+//       c=first two digits of year i.e. number of centuries.
+//
+// once we have f we divide by 7 and take remainder.If negative add 7. remainder = day of the week
+// 0=sunday 1=monday 6=saturday etc.
+//////////////////////////////////////////////////////////////////////////////////////////////
+// includes
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <windows.h>
+#include <cstdlib>
+// using statements
+using namespace std;
+// function prototypes
+void clrscr();
+void gotoxy(int,int);
+// classes
+class calender
+{
+public:
+	calender(int d=1,int m=1,int y=2001); //defaults to 1/1/2001 (uk format dd/mm/yy)
+	virtual ~calender() {} // do nothing destructor virtual in case of use of inheritance
+	void printcalender();
+	
+private:
+	bool isleapyear(); // returns true if year is leap
+	int checkday(int); // checks legality of date
+	int whatdayisfirstofmonth(); // returns 0 to 6 sunday to saturday
+	int howmanydays(); // returns number of days in month
+	int day;
+	int month;
+	int year;
+};
+//////////////////////////////////////////////////////////////////////////////////////////////
+// constructor
+//
+// checks validity of date and sets members
+//
+//////////////////////////////////////////////////////////////////////////////////////////////
+calender::calender(int d,int m,int y)
+{
+	
+	if (y<1582) // church accepted gregorian calender in 1582
+	{
+		cout<<endl<<"The year "<<y<<" is before the gregorian calender was accepted by the church."
+			<<"Setting to 2001."<<endl;
+		year=2001; // invalid year so set to 2001
+	}
+	else
+	{
+		year=y; // y is valid so use it to set year
+	}
+	if ((m>=1) && (m<=12)) // check month between 1 and 12
+	{
+		month=m; // if it is set month
+	}
+	
+	else
+	{
+		cout<<endl<<"The month "<<m<<" is invalid. Setting to month 1"<<endl;
+		month=1;
+	}
+	day=checkday(d); // validate the day
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+//
+// isleapyear()
+//
+// checks whether year is a leap year in the gregorian calender
+// a year is leap if it is divisable by four but not if divisible by 100
+// unless it is divisible by 400
+//
+// returns true if leap and false if not
+//
+//////////////////////////////////////////////////////////////////////////////////////////////
+bool calender::isleapyear()
+{
+	if ((year%400==0) || ((year %4==0) && (year%100 !=0)))
+	{
+		return true; // its a leap year
+	}
+	
+	else
+	{
+		return false; // its not a leap year
+	}
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+//
+// checkday(int)
+//
+// checks day is legal for month
+//
+// in:- day to be tested
+//
+// returns day if legal and 1 if not legal
+//
+//////////////////////////////////////////////////////////////////////////////////////////////
+int calender::checkday(int testday)
+{
+	
+	if ((testday>0) && (testday<= howmanydays()))
+	{
+		return testday; // day is valid for month
+	}
+	cout<<endl<<"Invalid day entered "<<testday<<"/"<<month<<"/"<<year
+		<<". Setting to the first of the month."<<endl;
+	return 1; // hopefully wont get here but if invalid day entered day is set to 1
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+//
+// int howmanydays()
+//
+// returns number of days in month
+//
+//////////////////////////////////////////////////////////////////////////////////////////////
+int calender::howmanydays()
+{
+	if((month==2)&& isleapyear())
+	{
+		return 29; // feb has 29 days in a leap year
+	}
+	static const int daysinmonth[12]={31,28,31,30,31,30,31,31,30,31,30,31};
+	return daysinmonth[month-1];
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+//
+// int whatdayisfirstofmonth()
+//
+// uses zeller's algorithm to find out what day the first of the month falls on falls on.
+//
+// returns 0 to 6 corresponding to sunday to saturday.
+//
+//////////////////////////////////////////////////////////////////////////////////////////////
+int calender::whatdayisfirstofmonth()
+{
+	int c=year/100; // # of centuries
+	int d=year%100; // # of years through century
+	int m=(month+10)%12; // # of month march is 1,feb is 12
+	int k=1; // set the day part to 1 so we get back the day for first of month
+	if ((month==1)||(month==2))// treat jan and feb as if they were in previous year
+	{
+		if (d==0) // if d is 0 then to go back a year d becomes 99 and c become c-1
+		{
+			d=99;
+			c-=1;
+		}
+		else
+		{
+		d-=1; // jan and feb are treated as previous year
+		}
+	}
+	 float g=(k + (floor(((13*m)-1)/5)) + d + (floor(d/4)) + (floor(c/4)) - (2*c));
+	 int f=static_cast<int>(g)%7; // cast result of algorithm to int to take modulus
+	 if (f<0) // if negative add 7
+	 {
+		 f+=7;
+	 }
+	 return f; // returns 0 to 6 corresponding to sunday to saturday
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+//
+// void printcalender()
+//
+// prints the calender for the entered date
+//
+//////////////////////////////////////////////////////////////////////////////////////////////
+void calender::printcalender()
+{
+	clrscr();
+	cout<<"Date entered was :- "<<day<<"/"<<month<<"/"<<year<<endl;
+	cout<<endl<<setw(8)<<"SUNDAY"<<setw(8)<<"MONDAY"<<setw(9)<<"TUESDAY"<<setw(11)<<"WEDNESDAY"<<setw(10)
+		<<"THURSDAY"<<setw(8)<<"FRIDAY"<<setw(10)<<"SATURDAY"<<endl;
+	int startday=whatdayisfirstofmonth();
+	int endday=howmanydays();
+	for (int i=0;i<startday;i++)
+	{
+		if (i==0) 
+		{
+			gotoxy(4,4);
+			cout<<"-";
+		}
+		if (i==1)
+		{
+			gotoxy(12,4);
+			cout<<"-";
+		}
+		if (i==2)
+		{
+			gotoxy(21,4);
+			cout<<"-";
+		}
+		if (i==3)
+		{
+			gotoxy(31,4);
+			cout<<"-";
+		}
+		if (i==4)
+		{
+			gotoxy(42,4);
+			cout<<"-";
+		}
+		if (i==5)
+		{
+			gotoxy(50,4);
+			cout<<"-";
+		}
+	} // end of for loop
+	
+	
+	int rows=4;
+	int count=1;
+	for(int j=startday;j<(startday+endday);j++)
+		{
+		if(j%7==0)
+		{ 
+			rows+=2;
+			gotoxy(4,rows);
+		}
+		if(j%7==1) gotoxy(12,rows);
+		if(j%7==2) gotoxy(21,rows);
+		if(j%7==3) gotoxy(31,rows);
+		if(j%7==4) gotoxy(42,rows);
+		if(j%7==5) gotoxy(50,rows);
+		if(j%7==6) gotoxy(60,rows);
+		if(count==day) // set text to bright red if count is the day entered
+		{
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_INTENSITY|FOREGROUND_RED);
+		}
+		else
+		{
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_BLUE|FOREGROUND_GREEN);
+		}
+		cout<<count;
+		count ++;
+	} // end of for loop
+	cout<<endl<<endl<<endl;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+//
+// void clrscr()
+//
+// clears the console window
+//
+// Thanks go to sunlight @ cprogramming.com
+//
+//////////////////////////////////////////////////////////////////////////////////////////////
+void clrscr()
+{
+   COORD coordScreen = { 0, 0 };
+   DWORD cCharsWritten;
+   CONSOLE_SCREEN_BUFFER_INFO csbi;
+   DWORD dwConSize;
+   HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+   GetConsoleScreenBufferInfo(hConsole, &csbi);
+   dwConSize = csbi.dwSize.X * csbi.dwSize.Y;
+   FillConsoleOutputCharacter(hConsole, TEXT(' '), dwConSize, coordScreen, &cCharsWritten);
+   GetConsoleScreenBufferInfo(hConsole, &csbi);
+   FillConsoleOutputAttribute(hConsole, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten);
+   SetConsoleCursorPosition(hConsole, coordScreen);
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+//
+// void gotoxy(int x,int y)
+// 
+// moves cursor to x,y in windows console
+//
+//////////////////////////////////////////////////////////////////////////////////////////////
+void gotoxy(int x, int y) 
+{ 
+    COORD point; 
+    point.X = x; point.Y = y; 
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),point); 
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+//
+// int main()
+//
+// entry point for program
+//
+// returns 0 back to the OS
+//
+//////////////////////////////////////////////////////////////////////////////////////////////
+int main()
+{
+	
+	while (1)
+	{
+	clrscr();
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_INTENSITY|FOREGROUND_RED|FOREGROUND_BLUE|FOREGROUND_GREEN);
+	cout<<"Welcome to the gregorian calender calculator. v.1.00"<<endl<<endl
+		<<"Use UK format.... day/month/full year. Use the '/' char to delimit your entry..."
+		<<endl<<endl;
+	cout<<"Please enter the date you would like to see the calender for :- ";
+	char input_day[4];
+	char input_month[4];
+	char input_year[6];
+	cin.getline(input_day,3,'/'); // get the input as strings
+	cin.getline(input_month,3,'/');
+	cin.getline(input_year,5,'\n');
+	cout<<endl;
+	int d=atoi(input_day); // convert input to integer
+	int m=atoi(input_month);
+	int y=atoi(input_year);
+	calender date(d,m,y); // instantiate the calender object
+	system("PAUSE"); // wait for a keypress
+	date.printcalender(); // print the calender
+	cout<<"Another calender (Y/N) ? ";
+	char input[5];
+	cin.getline(input,4);
+	if ((input[0]=='N') || (input[0]=='n'))
+	{
+		break; // drop out of while loop
+	}
+	} // end of while loop
+	
+	return 0;
+}
+
+/*  Period Table Program
+ *
+ *  Programmed by Carlo
+ *  Project Started October 3, 2001
+ *
+*/
+#include <iostream.h>
+#include <conio.h>
+#include <rw/random.h>
+#include <string.h>
+#include <armory.h>
+//---------------------------------------------------------------------------
+void Table(string Name, double Number, int Group, int Period, string Formula, string Charge, double Mass, int Neutrons, string Special)
+{
+Neutrons = (Mass - Number);
+clrscr();
+gotoxy(1,2);
+cout<< "Element Name:  " << Name << "\n\n";
+cout<< "Formula:       " << Formula << "\n";
+cout<< "Atomic Number: " << Number << "\n";
+cout<< "Atomic Mass:   " << Mass << "\n";
+cout<< "Group:         " << Group << "\n";
+cout<< "Period:        " << Period << "\n";
+cout<< "Charge:        " << Charge << "\n";
+cout<< "Neutrons:      " << Neutrons << "\n";
+if (Special != "None")
+{
+cout<< "Note:          " << Special << "\n";
+}
+Pause();
+clrscr();
+gotoxy(1,2);
+}
+//---------------------------------------------------------------------------
+void Help()
+{
+clrscr();
+gotoxy(1,2);
+cout<< "HELP\n\n";
+cout<< "Help            - Opens this window.\n";
+cout<< "Clear           - Clears current screen.\n";
+cout<< "Prefix          - Lists prefix terms.\n";
+cout<< "Element Formula - Displays information of element (eg: Sn).\n";
+cout<< "Atomic Number   - Displays information of element (eg: 50).\n";
+cout<< "Element Name    - Displays information of element (eg: tin).\n";
+cout<< "Credits         - Information on the programmer.\n";
+cout<< "Quit            - Quits the program.\n";
+Pause();
+clrscr();
+gotoxy(1,2);
+}
+//---------------------------------------------------------------------------
+void Credits()
+{
+char CreditsKey;
+clrscr();
+gotoxy(1,2);
+cout<< "CREDITS\n\n";
+cout<< "I made the PERIODIC TABLE program near the end of 2000. I\n";
+cout<< "had just discovered the world of C++ program, and was eager\n";
+cout<< "to test it out. This is the result.\n";
+cout<< "I have always enjoyed chemistry, and so it was no surprise to\n";
+cout<< "me when a periodic table program was the first idea that\n";
+cout<< "popped into my head.\n";
+cout<< "I hope you have all enjoyed the program as an educational tool.\n";
+cout<< "Enjoy the program, use it often, and my vision will be fufilled.\n\n";
+cout<< "\tProgrammed by Carlo (completed 2001)\n";
+Pause();
+clrscr();
+gotoxy(1,2);
+}
+//---------------------------------------------------------------------------
+void Prefix()
+{
+clrscr();
+gotoxy(1,2);
+cout<< "PREFIX\n\n";
+cout<< "mono          - One (1)\n";
+cout<< "di            - Two (2)\n";
+cout<< "tri           - Three (3)\n";
+cout<< "tetra         - Four (4)\n";
+cout<< "penta         - Five (5)\n";
+cout<< "hexa          - Six (6)\n";
+cout<< "hepta         - Seven (7)\n";
+cout<< "octa          - Eight (8)\n";
+cout<< "nona or ennea - Nine (9)\n";
+cout<< "deca          - Ten (10)\n";
+Pause();
+clrscr();
+gotoxy(1,2);
+}
+//---------------------------------------------------------------------------
+int main()
+{
+randomize();
+Wait();
+int Color = 1+random(8);
+if (Color == 1)
+{
+textcolor(RED);
+}
+else if (Color == 2)
+{
+textcolor(MAGENTA);
+}
+else if (Color == 3)
+{
+textcolor(BLUE);
+}
+else if (Color == 4)
+{
+textcolor(GREEN);
+}
+else if (Color == 5)
+{
+textcolor(WHITE);
+}
+else if (Color == 6)
+{
+textcolor(YELLOW);
+}
+else if (Color == 7)
+{
+textcolor(BROWN);
+}
+else if (Color == 8)
+{
+textcolor(CYAN);
+}
+clrscr();
+gotoxy(1,11);
+cout<< "\a\t\t\t       PERIODIC TABLE         \n";
+cout<< "\a\t\t\t   *--------------------*     \n";
+cout<<endl;
+cout<< "\a\t\t\t      Program by Carlo        \n";
+cout<< "\a\t\t\t          c.  2001            \n";
+gotoxy(35,15);
+Pause();
+textcolor(WHITE);
+textbackground(BLUE);
+clrscr();
+gotoxy(1,2);
+//---------------------------------------------------------------------------
+// VARIABLES
+string Formula,
+       Name,
+       Command,
+       Charge,
+       Special = "None";
+int    Group,
+       Period;
+double Mass,
+       Neutrons,
+       Number;
+//---------------------------------------------------------------------------
+do{
+cout<< "COMMAND: ";
+cin>> Command;
+if ((Command == "Help") || (Command == "HELP") || (Command == "help"))
+{
+Help();
+}
+else if ((Command == "Credits") || (Command == "CREDITS") || (Command == "credits"))
+{
+Credits();
+}
+else if ((Command == "Clear") || (Command == "CLEAR") || (Command == "clear"))
+{
+clrscr();
+gotoxy(1,2);
+}
+else if ((Command == "Prefix") || (Command == "PREFIX") || (Command == "prefix"))
+{
+Prefix();
+}
+//---------------------------------------------------------------------------
+else if ((Command == "1") || (Command == "hydrogen") || (Command == "H"))
+{
+Name = "hydrogen";
+Number = 1;
+Group = 1;
+Period = 1;
+Formula = "H";
+Charge = "1+";
+Mass = 1.01;
+Special = "Diatomic";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "2") || (Command == "helium") || (Command == "He"))
+{
+Name = "helium";
+Number = 2;
+Group = 18;
+Period = 1;
+Formula = "He";
+Charge = "0";
+Mass = 4.00;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "3") || (Command == "lithium") || (Command == "Li"))
+{
+Name = "lithium";
+Number = 3;
+Group = 1;
+Period = 2;
+Formula = "Li";
+Charge = "1+";
+Mass = 6.94;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "4") || (Command == "beryllium") || (Command == "Be"))
+{
+Name = "beryllium";
+Number = 4;
+Group = 2;
+Period = 2;
+Formula = "Be";
+Charge = "2+";
+Mass = 9.01;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "5") || (Command == "boron") || (Command == "B"))
+{
+Name = "boron";
+Number = 5;
+Group = 13;
+Period = 2;
+Formula = "B";
+Charge = "3+";
+Mass = 10.81;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "6") || (Command == "carbon") || (Command == "C"))
+{
+Name = "carbon";
+Number = 6;
+Group = 14;
+Period = 2;
+Formula = "C";
+Charge = "4+";
+Mass = 12.01;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "7") || (Command == "nitrogen") || (Command == "N"))
+{
+Name = "nitrogen";
+Number = 7;
+Group = 15;
+Period = 2;
+Formula = "N";
+Charge = "3-";
+Mass = 14.01;
+Special = "Diatomic";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "8") || (Command == "oxygen") || (Command == "O"))
+{
+Name = "oxygen";
+Number = 8;
+Group = 16;
+Period = 2;
+Formula = "O";
+Charge = "2-";
+Mass = 16.00;
+Special = "Diatomic";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "9") || (Command == "flourine") || (Command == "F"))
+{
+Name = "fluorine";
+Number = 9;
+Group = 17;
+Period = 2;
+Formula = "F";
+Charge = "1-";
+Mass = 19.00;
+Special = "Diatomic";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "10") || (Command == "neon") || (Command == "Ne"))
+{
+Name = "neon";
+Number = 10;
+Group = 18;
+Period = 2;
+Formula = "Ne";
+Charge = "0";
+Mass = 20.18;
+Special = "Noble Gas";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "11") || (Command == "sodium") || (Command == "Na"))
+{
+Name = "sodium";
+Number = 11;
+Group = 1;
+Period = 3;
+Formula = "Na";
+Charge = "1+";
+Mass = 22.99;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "12") || (Command == "magnesium") || (Command == "Mg"))
+{
+Name = "magnesium";
+Number = 12;
+Group = 2;
+Period = 3;
+Formula = "Mg";
+Charge = "2+";
+Mass = 24.31;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "13") || (Command == "aluminum") || (Command == "Al"))
+{
+Name = "aluminum";
+Number = 13;
+Group = 13;
+Period = 3;
+Formula = "Al";
+Charge = "3+";
+Mass = 26.98;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "14") || (Command == "silicon") || (Command == "Si"))
+{
+Name = "silicon";
+Number = 14;
+Group = 14;
+Period = 3;
+Formula = "Si";
+Charge = "4+";
+Mass = 28.09;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "15") || (Command == "phosphorous") || (Command == "P"))
+{
+Name = "phosphorus";
+Number = 15;
+Group = 15;
+Period = 3;
+Formula = "P";
+Charge = "3-";
+Mass = 30.97;
+Special = "Diatomic";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "16") || (Command == "sulfur") || (Command == "S"))
+{
+Name = "sulfur";
+Number = 16;
+Group = 16;
+Period = 3;
+Formula = "S";
+Charge = "2-";
+Mass = 32.06;
+Special = "Diatomic";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "17") || (Command == "chlorine") || (Command == "Cl"))
+{
+Name = "chlorine";
+Number = 17;
+Group = 17;
+Period = 3;
+Formula = "Cl";
+Charge = "1-";
+Mass = 35.45;
+Special = "Diatomic";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "18") || (Command == "argon") || (Command == "Ar"))
+{
+Name = "argon";
+Number = 18;
+Group = 18;
+Period = 3;
+Formula = "Ar";
+Charge = "0";
+Mass = 39.95;
+Special = "Noble Gas";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "19") || (Command == "potassium") || (Command == "K"))
+{
+Name = "potassium";
+Number = 19;
+Group = 1;
+Period = 4;
+Formula = "K";
+Charge = "1+";
+Mass = 39.10;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "20") || (Command == "calcium") || (Command == "Ca"))
+{
+Name = "calcium";
+Number = 20;
+Group = 2;
+Period = 4;
+Formula = "Ca";
+Charge = "2+";
+Mass = 40.08;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "21") || (Command == "scandium") || (Command == "Sc"))
+{
+Name = "scandium";
+Number = 21;
+Group = 3;
+Period = 4;
+Formula = "Sc";
+Charge = "3+";
+Mass = 44.96;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "22") || (Command == "titanium") || (Command == "Ti"))
+{
+Name = "titanium";
+Number = 22;
+Group = 4;
+Period = 4;
+Formula = "Ti";
+Charge = "4+ \\ 3+";
+Mass = 47.88;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "23") || (Command == "vanadium") || (Command == "V"))
+{
+Name = "vanadium";
+Number = 23;
+Group = 5;
+Period = 4;
+Formula = "V";
+Charge = "5+ \\ 4+";
+Mass = 50.94;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "24") || (Command == "chromium") || (Command == "Cr"))
+{
+Name = "chromium";
+Number = 24;
+Group = 6;
+Period = 4;
+Formula = "Cr";
+Charge = "3+ \\ 2+";
+Mass = 52.00;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "25") || (Command == "manganese") || (Command == "Mn"))
+{
+Name = "manganese";
+Number = 25;
+Group = 7;
+Period = 4;
+Formula = "Mn";
+Charge = "2+ \\ 4+";
+Mass = 54.94;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "26") || (Command == "iron") || (Command == "Fe"))
+{
+Name = "iron";
+Number = 26;
+Group = 8;
+Period = 4;
+Formula = "Fe";
+Charge = "3+ \\ 2+";
+Mass = 55.85;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "27") || (Command == "cobalt") || (Command == "Co"))
+{
+Name = "cobalt";
+Number = 27;
+Group = 9;
+Period = 4;
+Formula = "Co";
+Charge = "2+ \\ 3+";
+Mass = 58.93;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "28") || (Command == "nickel") || (Command == "Ni"))
+{
+Name = "nickel";
+Number = 28;
+Group = 10;
+Period = 4;
+Formula = "Ni";
+Charge = "2+ \\ 3+";
+Mass = 58.69;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "29") || (Command == "copper") || (Command == "Cu"))
+{
+Name = "copper";
+Number = 29;
+Group = 11;
+Period = 4;
+Formula = "Cu";
+Charge = "2+ \\ 1+";
+Mass = 63.55;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "30") || (Command == "zinc") || (Command == "Zn"))
+{
+Name = "zinc";
+Number = 30;
+Group = 12;
+Period = 4;
+Formula = "Zn";
+Charge = "2+";
+Mass = 65.38;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "31") || (Command == "gallium") || (Command == "Ga"))
+{
+Name = "gallium";
+Number = 31;
+Group = 13;
+Period = 4;
+Formula = "Ga";
+Charge = "3+";
+Mass = 69.72;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "32") || (Command == "germanium") || (Command == "Ge"))
+{
+Name = "germanium";
+Number = 32;
+Group = 14;
+Period = 4;
+Formula = "Ge";
+Charge = "4+";
+Mass = 72.61;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "33") || (Command == "arsonic") || (Command == "As"))
+{
+Name = "arsonic";
+Number = 33;
+Group = 15;
+Period = 4;
+Formula = "As";
+Charge = "3-";
+Mass = 74.92;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "34") || (Command == "selenium") || (Command == "Se"))
+{
+Name = "selenium";
+Number = 34;
+Group = 16;
+Period = 4;
+Formula = "Se";
+Charge = "2-";
+Mass = 78.96;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "35") || (Command == "bromine") || (Command == "Br"))
+{
+Name = "bromine";
+Number = 35;
+Group = 17;
+Period = 4;
+Formula = "Br";
+Charge = "1-";
+Mass = 79.90;
+Special = "Diatomic";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "36") || (Command == "krypton") || (Command == "Kr"))
+{
+Name = "krypton";
+Number = 36;
+Group = 18;
+Period = 4;
+Formula = "Kr";
+Charge = "0";
+Mass = 83.80;
+Special = "Noble Gas";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "37") || (Command == "rubidium") || (Command == "Rb"))
+{
+Name = "rubidium";
+Number = 37;
+Group = 1;
+Period = 5;
+Formula = "Rb";
+Charge = "1+";
+Mass = 85.47;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "38") || (Command == "stronthum") || (Command == "Sr"))
+{
+Name = "stronthum";
+Number = 38;
+Group = 2;
+Period = 5;
+Formula = "Sr";
+Charge = "2+";
+Mass = 87.62;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "39") || (Command == "ythrium") || (Command == "Y"))
+{
+Name = "ythrium";
+Number = 39;
+Group = 3;
+Period = 5;
+Formula = "Y";
+Charge = "3+";
+Mass = 88.91;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "40") || (Command == "zirconium") || (Command == "Zr"))
+{
+Name = "zirconium";
+Number = 40;
+Group = 4;
+Period = 5;
+Formula = "Zr";
+Charge = "4+";
+Mass = 91.22;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "41") || (Command == "niobium") || (Command == "Nb"))
+{
+Name = "niobium";
+Number = 41;
+Group = 5;
+Period = 5;
+Formula = "Nb";
+Charge = "5+ \\ 3+";
+Mass = 92.91;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "42") || (Command == "molybdenum") || (Command == "Mo"))
+{
+Name = "molybdenum";
+Number = 42;
+Group = 6;
+Period = 5;
+Formula = "Mo";
+Charge = "6+";
+Mass = 95.94;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "43") || (Command == "techenium") || (Command == "Tc"))
+{
+Name = "techenium";
+Number = 43;
+Group = 7;
+Period = 5;
+Formula = "Tc";
+Charge = "7+";
+Mass = 98.91;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "44") || (Command == "ruthenium") || (Command == "Ru"))
+{
+Name = "ruthenium";
+Number = 44;
+Group = 8;
+Period = 5;
+Formula = "Ru";
+Charge = "3+ \\ 4+";
+Mass = 101.07;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "45") || (Command == "rhodium") || (Command == "Rh"))
+{
+Name = "rhodium";
+Number = 45;
+Group = 9;
+Period = 5;
+Formula = "Rh";
+Charge = "3+";
+Mass = 102.91;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "46") || (Command == "palladium") || (Command == "Pd"))
+{
+Name = "palladium";
+Number = 46;
+Group = 10;
+Period = 5;
+Formula = "Pd";
+Charge = "2+ \\ 4+";
+Mass = 106.42;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "47") || (Command == "silver") || (Command == "Ag"))
+{
+Name = "silver";
+Number = 47;
+Group = 11;
+Period = 5;
+Formula = "Ag";
+Charge = "1+";
+Mass = 107.87;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "48") || (Command == "cadmium") || (Command == "Cd"))
+{
+Name = "cadmium";
+Number = 48;
+Group = 12;
+Period = 5;
+Formula = "Cd";
+Charge = "2+";
+Mass = 112.41;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "49") || (Command == "indium") || (Command == "In"))
+{
+Name = "indium";
+Number = 49;
+Group = 13;
+Period = 5;
+Formula = "In";
+Charge = "3+";
+Mass = 114.82;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "50") || (Command == "tin") || (Command == "Sn"))
+{
+Name = "tin";
+Number = 50;
+Group = 14;
+Period = 5;
+Formula = "Sn";
+Charge = "4+ \\ 2+";
+Mass = 118.69;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "51") || (Command == "antimony") || (Command == "Sb"))
+{
+Name = "antimony";
+Number = 51;
+Group = 15;
+Period = 5;
+Formula = "Sb";
+Charge = "3+ \\ 5+";
+Mass = 121.75;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "52") || (Command == "tellurium") || (Command == "Te"))
+{
+Name = "tellurium";
+Number = 52;
+Group = 16;
+Period = 5;
+Formula = "Te";
+Charge = "2-";
+Mass = 127.60;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "53") || (Command == "iodine") || (Command == "I"))
+{
+Name = "iodine";
+Number = 53;
+Group = 17;
+Period = 5;
+Formula = "I";
+Charge = "1-";
+Mass = 126.90;
+Special = "Diatomic";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "54") || (Command == "xenon") || (Command == "Xe"))
+{
+Name = "xenon";
+Number = 54;
+Group = 18;
+Period = 5;
+Formula = "Xe";
+Charge = "0";
+Mass = 131.29;
+Special = "Noble Gas";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "55") || (Command == "cosium") || (Command == "Cs"))
+{
+Name = "cosiumn";
+Number = 55;
+Group = 1;
+Period = 6;
+Formula = "Cs";
+Charge = "1+";
+Mass = 132.91;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "56") || (Command == "barium") || (Command == "Ba"))
+{
+Name = "barium";
+Number = 56;
+Group = 2;
+Period = 6;
+Formula = "Ba";
+Charge = "2+";
+Mass = 137.33;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "57") || (Command == "lanthanum") || (Command == "La"))
+{
+Name = "lanthanum";
+Number = 57;
+Group = 3;
+Period = 6;
+Formula = "La";
+Charge = "3+";
+Mass = 138.91;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "58") || (Command == "cerium") || (Command == "Ce"))
+{
+Name = "cerium";
+Number = 58;
+Group = 5;
+Period = 6;
+Formula = "Ce";
+Charge = "3+";
+Mass = 140.12;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "59") || (Command == "pruseodymium") || (Command == "Pr"))
+{
+Name = "pruseodymium";
+Number = 59;
+Group = 6;
+Period = 6;
+Formula = "Pr";
+Charge = "3+";
+Mass = 140.91;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "60") || (Command == "neodymium") || (Command == "Nd"))
+{
+Name = "neodymium";
+Number = 60;
+Group = 7;
+Period = 6;
+Formula = "Nd";
+Charge = "3+";
+Mass = 144.24;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "61") || (Command == "promethium") || (Command == "Pm"))
+{
+Name = "promethium";
+Number = 61;
+Group = 8;
+Period = 6;
+Formula = "Pm";
+Charge = "3+";
+Mass = 145;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "62") || (Command == "samarium") || (Command == "Sm"))
+{
+Name = "samarium";
+Number = 62;
+Group = 9;
+Period = 6;
+Formula = "Sm";
+Charge = "3+ \\ 2+";
+Mass = 150.40;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "63") || (Command == "europium") || (Command == "Eu"))
+{
+Name = "europium";
+Number = 63;
+Group = 10;
+Period = 6;
+Formula = "Eu";
+Charge = "3+ \\ 2+";
+Mass = 151.97;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "64") || (Command == "gadolinium") || (Command == "Gd"))
+{
+Name = "gadolinium";
+Number = 64;
+Group = 11;
+Period = 6;
+Formula = "Gd";
+Charge = "3+";
+Mass = 157.25;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "65") || (Command == "terbium") || (Command == "Tb"))
+{
+Name = "terbium";
+Number = 65;
+Group = 12;
+Period = 6;
+Formula = "Tb";
+Charge = "3+";
+Mass = 158.93;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "66") || (Command == "dysprosium") || (Command == "Dy"))
+{
+Name = "dysprosium";
+Number = 66;
+Group = 13;
+Period = 6;
+Formula = "Dy";
+Charge = "3+";
+Mass = 162.50;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "67") || (Command == "helmium") || (Command == "Ho"))
+{
+Name = "helmium";
+Number = 67;
+Group = 14;
+Period = 6;
+Formula = "Ho";
+Charge = "3+";
+Mass = 164.93;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "68") || (Command == "erbium") || (Command == "Er"))
+{
+Name = "erbium";
+Number = 68;
+Group = 15;
+Period = 6;
+Formula = "Er";
+Charge = "3+";
+Mass = 167.26;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "69") || (Command == "thulium") || (Command == "Tm"))
+{
+Name = "thulium";
+Number = 69;
+Group = 16;
+Period = 6;
+Formula = "Tm";
+Charge = "3+";
+Mass = 168.94;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "70") || (Command == "ytlerhium") || (Command == "Yb"))
+{
+Name = "ytlerhium";
+Number = 70;
+Group = 17;
+Period = 6;
+Formula = "Yb";
+Charge = "3+ \\ 2+";
+Mass = 173.04;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "71") || (Command == "lutelium") || (Command == "Lu"))
+{
+Name = "lutelium";
+Number = 71;
+Group = 18;
+Period = 6;
+Formula = "Lu";
+Charge = "3+";
+Mass = 174.97;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "72") || (Command == "hefnium") || (Command == "Hf"))
+{
+Name = "hefnium";
+Number = 72;
+Group = 4;
+Period = 6;
+Formula = "Hf";
+Charge = "4+";
+Mass = 178.49;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "73") || (Command == "tantalum") || (Command == "Ta"))
+{
+Name = "tantalum";
+Number = 73;
+Group = 5;
+Period = 6;
+Formula = "Ta";
+Charge = "5+";
+Mass = 180.95;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "74") || (Command == "wolfrum") || (Command == "tungsten") || (Command == "W"))
+{
+Name = "wolfrum (tungsten)";
+Number = 74;
+Group = 6;
+Period = 6;
+Formula = "W";
+Charge = "6+";
+Mass = 183.85;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "75") || (Command == "rhenium") || (Command == "Re"))
+{
+Name = "rhenium";
+Number = 75;
+Group = 7;
+Period = 6;
+Formula = "Re";
+Charge = "7+";
+Mass = 186.21;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "76") || (Command == "osmium") || (Command == "Os"))
+{
+Name = "osmium";
+Number = 76;
+Group = 8;
+Period = 6;
+Formula = "Os";
+Charge = "4+";
+Mass = 190.2;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "77") || (Command == "iridium") || (Command == "Ir"))
+{
+Name = "iridium";
+Number = 77;
+Group = 9;
+Period = 6;
+Formula = "Ir";
+Charge = "4+";
+Mass = 192.22;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "78") || (Command == "platinum") || (Command == "Pt"))
+{
+Name = "platinum";
+Number = 78;
+Group = 10;
+Period = 6;
+Formula = "Pt";
+Charge = "4+ \\ 2+";
+Mass = 195.08;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "79") || (Command == "gold") || (Command == "Au"))
+{
+Name = "gold";
+Number = 79;
+Group = 11;
+Period = 6;
+Formula = "Au";
+Charge = "3+ \\ 1+";
+Mass = 196.97;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "80") || (Command == "mercury") || (Command == "Mg"))
+{
+Name = "mercury";
+Number = 80;
+Group = 12;
+Period = 6;
+Formula = "Hg";
+Charge = "2+ \\ 1+";
+Mass = 200.59;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "81") || (Command == "thallium") || (Command == "Tl"))
+{
+Name = "thallium";
+Number = 81;
+Group = 13;
+Period = 6;
+Formula = "Tl";
+Charge = "1+ \\ 3+";
+Mass = 204.38;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "82") || (Command == "lead") || (Command == "Pb"))
+{
+Name = "lead";
+Number = 82;
+Group = 14;
+Period = 6;
+Formula = "Pb";
+Charge = "2+ \\ 4+";
+Mass = 207.20;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "83") || (Command == "bismuth") || (Command == "Bi"))
+{
+Name = "bismuth";
+Number = 83;
+Group = 15;
+Period = 6;
+Formula = "Bi";
+Charge = "3+ \\ 5+";
+Mass = 208.98;
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "84") || (Command == "polonium") || (Command == "Po"))
+{
+Name = "polonium";
+Number = 84;
+Group = 16;
+Period = 6;
+Formula = "Po";
+Charge = "2+ \\ 4+";
+Mass = 209;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "85") || (Command == "asiatine") || (Command == "At"))
+{
+Name = "asiatine";
+Number = 85;
+Group = 17;
+Period = 6;
+Formula = "At";
+Charge = "1-";
+Mass = 210;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "86") || (Command == "radon") || (Command == "Rn"))
+{
+Name = "radon";
+Number = 86;
+Group = 18;
+Period = 6;
+Formula = "Rn";
+Charge = "0";
+Mass = 222;   
+Special = "Noble Gas";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "87") || (Command == "fruncium") || (Command == "Fr"))
+{
+Name = "fruncium";
+Number = 87;
+Group = 1;
+Period = 7;
+Formula = "Fr";
+Charge = "1+";
+Mass = 223;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "88") || (Command == "radium") || (Command == "Ra"))
+{
+Name = "radium";
+Number = 88;
+Group = 2;
+Period = 7;
+Formula = "Ra";
+Charge = "2+";
+Mass = 226.03;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "89") || (Command == "actinium") || (Command == "Ac"))
+{
+Name = "actinium";
+Number = 89;
+Group = 3;
+Period = 7;
+Formula = "Ac";
+Charge = "3+";
+Mass = 227.03;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "90") || (Command == "thorlum") || (Command == "Th"))
+{
+Name = "thorlum";
+Number = 90;
+Group = 5;
+Period = 7;
+Formula = "Th";
+Charge = "4+";
+Mass = 232.04;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "91") || (Command == "protactinium") || (Command == "Pa"))
+{
+Name = "protactinium";
+Number = 91;
+Group = 6;
+Period = 7;
+Formula = "Pa";
+Charge = "5+ \\ 4+";
+Mass = 231.04;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "92") || (Command == "uranium") || (Command == "U"))
+{
+Name = "uranium";
+Number = 92;
+Group = 7;
+Period = 7;
+Formula = "U";
+Charge = "6+ \\ 4+";
+Mass = 238.03;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "93") || (Command == "neplunium") || (Command == "Np"))
+{
+Name = "neplunium";
+Number = 93;
+Group = 8;
+Period = 7;
+Formula = "Np";
+Charge = "5+";
+Mass = 237.05;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "94") || (Command == "plutonium") || (Command == "Pu"))
+{
+Name = "plutonium";
+Number = 94;
+Group = 9;
+Period = 7;
+Formula = "Pu";
+Charge = "4+ \\ 6+";
+Mass = 244;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "95") || (Command == "americium") || (Command == "Am"))
+{
+Name = "americium";
+Number = 95;
+Group = 10;
+Period = 7;
+Formula = "Am";
+Charge = "3+ \\ 4+";
+Mass = 244;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "96") || (Command == "curium") || (Command == "Cm"))
+{
+Name = "curium";
+Number = 96;
+Group = 11;
+Period = 7;
+Formula = "Cm";
+Charge = "3+";
+Mass = 247;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "97") || (Command == "borkelium") || (Command == "Bk"))
+{
+Name = "borkelium";
+Number = 97;
+Group = 12;
+Period = 7;
+Formula = "Bk";
+Charge = "3+ \\ 4+";
+Mass = 247;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "98") || (Command == "californium") || (Command == "Cf"))
+{
+Name = "californium";
+Number = 98;
+Group = 13;
+Period = 7;
+Formula = "Cf";
+Charge = "3+";
+Mass = 251;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "99") || (Command == "einsteinium") || (Command == "Es"))
+{
+Name = "einsteinium";
+Number = 99;
+Group = 14;
+Period = 7;
+Formula = "Es";
+Charge = "3+";
+Mass = 252;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "100") || (Command == "formium") || (Command == "Fm"))
+{
+Name = "formium";
+Number = 100;
+Group = 15;
+Period = 7;
+Formula = "Fm";
+Charge = "3+";
+Mass = 257;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "101") || (Command == "mendelevium") || (Command == "Md"))
+{
+Name = "mendelevium";
+Number = 101;
+Group = 16;
+Period = 7;
+Formula = "Md";
+Charge = "2+ \\ 3+";
+Mass = 258;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "102") || (Command == "nebelium") || (Command == "No"))
+{
+Name = "nebelium";
+Number = 102;
+Group = 17;
+Period = 7;
+Formula = "No";
+Charge = "2+ \\ 3+";
+Mass = 259;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+else if ((Command == "103") || (Command == "lawrencium") || (Command == "Lr"))
+{
+Name = "lawrencium";
+Number = 103;
+Group = 18;
+Period = 7;
+Formula = "Lr";
+Charge = "3+";
+Mass = 260;   
+Special = "None";
+Table (Name, Number, Group, Period, Formula, Charge, Mass, Neutrons, Special);
+}
+//---------------------------------------------------------------------------
+else
+{
+ if ((Command != "Quit") && (Command != "QUIT") && (Command != "quit"))
+ {
+ cout<< "Unrecognized command.\n";
+ }
+}
+}while ((Command != "Quit") && (Command != "QUIT") && (Command != "quit"));
+Color = 1+random(8);
+if (Color == 1)
+{
+textcolor(RED);
+}
+else if (Color == 2)
+{
+textcolor(MAGENTA);
+}
+else if (Color == 3)
+{
+textcolor(BLUE);
+}
+else if (Color == 4)
+{
+textcolor(GREEN);
+}
+else if (Color == 5)
+{
+textcolor(WHITE);
+}
+else if (Color == 6)
+{
+textcolor(YELLOW);
+}
+else if (Color == 7)
+{
+textcolor(BROWN);
+}
+else if (Color == 8)
+{
+textcolor(CYAN);
+}
+textbackground(BLACK);
+clrscr();
+gotoxy(1,2);
+return(0);
+}
+// END OF Table.cpp
+
+/****************************************************************************
+** WARNING: You need a HUGE memory model to run this.                      **
+*****************************************************************************
+** Demonstration of playing a single wave file using DMA                   **
+**  by Steven H Don                                                        **
+**                                                                         **
+** For questions, feel free to e-mail me.                                  **
+**                                                                         **
+**    shd@geocities.com                                                    **
+**    http://www.geocities.com/SiliconValley/Heights/8574                  **
+**                                                                         **
+****************************************************************************/
+//Include files
+#include "ALLOC.H"
+#include "DOS.H"
+#include "CONIO.H"
+#include "STDIO.H"
+void playwav(char wavefile[14],float delaytime);
+struct WaveData {
+  unsigned int SoundLength, Frequency;
+  char *Sample;
+};
+struct HeaderType {
+  long         RIFF;      //RIFF header
+  char         NI1 [18];  //not important
+  unsigned int Channels;  //channels 1 = mono; 2 = stereo
+  long         Frequency; //sample frequency
+  char         NI2 [6];   //not important
+  char         BitRes;    //bit resolution 8/16 bit
+  char         NI3 [12];  //not important
+} Header;
+struct WaveData Voice;         //Pointer to wave file
+unsigned int    Base;          //Sound Blaster base address
+char            WaveFile [25]; //File name for the wave file to be played
+/****************************************************************************
+** Checks to see if a Sound Blaster exists at a given address, returns     **
+** true if Sound Blaster found, false if not.                              **
+****************************************************************************/
+int ResetDSP(unsigned int Test)
+{
+  //Reset the DSP
+  outportb (Test + 0x6, 1);
+  delay(10);
+  outportb (Test + 0x6, 0);
+  delay(10);
+  //Check if (reset was succesfull
+  if ((inportb(Test + 0xE) & 0x80 == 0x80) && (inportb(Test + 0xA) == 0xAA))
+  {
+    //DSP was found
+    Base = Test;
+    return (1);
+  }
+  else
+    //No DSP was found
+    return (0);
+}
+/****************************************************************************
+** Send a byte to the DSP (Digital Signal Processor) on the Sound Blaster  **
+****************************************************************************/
+void WriteDSP(unsigned char Value)
+{
+  //Wait for the DSP to be ready to accept data
+  while ((inportb(Base + 0xC) & 0x80) == 0x80);
+  //Send byte
+  outportb (Base + 0xC, Value);
+}
+/****************************************************************************
+** Plays a part of the memory                                              **
+****************************************************************************/
+void PlayBack (struct WaveData *Wave)
+{
+  long          LinearAddress;
+  unsigned int  Page, OffSet;
+  unsigned char TimeConstant;
+  TimeConstant = (65536 - (256000000 / Wave->Frequency)) >> 8;
+  WriteDSP(0x40);                  //DSP-command 40h - Set sample frequency
+  WriteDSP(TimeConstant);          //Write time constant
+  //Convert pointer to linear address
+  LinearAddress = FP_SEG (Wave->Sample);
+  LinearAddress = (LinearAddress << 4) + FP_OFF (Wave->Sample);
+  Page = LinearAddress >> 16;      //Calculate page
+  OffSet = LinearAddress & 0xFFFF; //Calculate offset in the page
+  /*
+      Note - this procedure only works with DMA channel 1
+  */
+  outportb (0x0A, 5);              //Mask DMA channel 1
+  outportb (0x0C, 0);              //Clear byte pointer
+  outportb (0x0B, 0x49);           //Set mode
+  /*
+      The mode consists of the following:
+      0x49 = binary 01 00 10 01
+                    |  |  |  |
+                    |  |  |  +- DMA channel 01
+                    |  |  +---- Read operation (the DSP reads from memory)
+                    |  +------- Single cycle mode
+                    +---------- Block mode
+  */
+  outportb (0x02, OffSet & 0x100); //Write the offset to the DMA controller
+  outportb (0x02, OffSet >> 8);
+  outportb (0x83, Page);           //Write the page to the DMA controller
+  outportb (0x03, Wave->SoundLength & 0x100);
+  outportb (0x03, Wave->SoundLength >> 8);
+  outportb (0x0A, 1);              //Unmask DMA channel
+  WriteDSP(0x14);                  // DSP-command 14h - Single cycle playback
+  WriteDSP(Wave->SoundLength & 0xFF);
+  WriteDSP(Wave->SoundLength >> 8);
+}
+/****************************************************************************
+** Loads a wave file into memory.                                          **
+** This procedure expects a _very_ standard wave header.                   **
+** It doesn't perform much error checking.                                 **
+****************************************************************************/
+int LoadVoice (struct WaveData *Voice, char *FileName)
+{
+  FILE *WAVFile;
+  //If it can't be opened...
+  WAVFile = fopen(FileName, "rb");
+  if (WAVFile == NULL) {
+    //..display error message
+    return (0);
+  }
+  //Return length of file for sound length minus 48 bytes for .WAV header
+  fseek(WAVFile, 0L, SEEK_END);
+  Voice->SoundLength = ftell (WAVFile) - 48;
+  fseek(WAVFile, 0L, SEEK_SET);
+  //Check RIFF header
+  if (Voice->SoundLength > 32000) {
+    if (Voice->SoundLength > 64000) {
+      Voice->SoundLength = 64000;
+    }
+  }
+  free(Voice->Sample);
+  Voice->Sample = (char *)malloc(Voice->SoundLength); //Assign memory
+  if (!Voice->Sample) {
+     
+    return (0);
+  }
+  //Load the sample data
+  fread(&Header, 46, 1, WAVFile);
+  //Check RIFF header
+  if (Header.RIFF != 0x46464952) {
+    printf ("Not a wave file\n");
+    return (0);
+  }
+  //Check channels
+  if (Header.Channels != 1) {
+    printf ("Not a mono wave file\n");
+    return (0);
+  }
+  //Check bit resolution
+  if (Header.BitRes != 8) {
+    printf ("Not an 8-bit wave file\n");
+    return (0);
+  }
+  Voice->Frequency = Header.Frequency;
+  //Load the sample data
+  fread(Voice->Sample, Voice->SoundLength + 2, 1, WAVFile);
+  fclose (WAVFile); //Close the file
+  return (1);
+}
+void playwav (char wavefile[14], float delaytime = 1.0 )
+{
+  if (ResetDSP (0x220)) {
+    //at 220h
+    printf ("");
+  } else {
+    if (ResetDSP (0x240)) {
+      //at 240h
+      printf ("");
+    } else {
+      //or none at all
+      printf ("");
+      return;
+    }
+  }
+  //Load wave file
+  if (LoadVoice (&Voice, wavefile)) {
+    //Start playback
+    PlayBack (&Voice);
+    delay(delaytime*1000);
+    //Stops DMA-transfer
+    WriteDSP (0xD0);
+  }
+}
+#include <iostream>	//cin & cout
+#include <fstream>	//ifstream and ostream	
+#include <string>	//string class
+#include <cstdlib>	//exit, system, strtol
+using namespace std;
+/*
+xorcrypt.cpp by James Turk (cozman)
+Wednesday January 9th, 2002 (11:56PM EST)
+Program Uses C++ to Demonstrate A Fairly Strong XOR Encryption.
+Includes EOF error checking and automatic detection of when it is unencrypting a file.
+Program Is Documented Well And Also Makes Good Use of the Built In String Class.
+Checked by Custom Syntax Checker To Conform to Current C++ Standard.
+Submitted to codejournal@cprogramming.com for Contest. (jturk@conceptofzero.com)
+Program Is Dedicated to The greatest girl ever, Julia I Love you!
+Program Compiles Error and Warning Free:
+	g++ -o xorcrypt.exe xorcrypt.cpp [-Wall] [-O2]
+	[] flags are optional
+*/
+char xorcrypt(char ch, long key) //function to return a character XOR'ed by a long key
+{
+	return ch ^ key;	//return ch XOR'ed by key
+}
+void error(void) //function to output error message and terminate
+{
+	cout << endl << "Fatal Error Occured, try a different key for this file." << endl;
+	exit(EXIT_FAILURE);
+}
+int main(int argc, char *argv[])
+{
+	ifstream inf;	//input file variable
+	ofstream outf;	//output file variable
+	unsigned loc;	//location in string used for searching
+	string fn;		//string for filename
+	long key;		//stores key for program
+	char tmp;		//variable to hold character read from input file
+	
+	if(argc == 3)	//if two command line args were passed
+	{
+		fn = argv[1];					//parse first command line element as original filename
+		key = strtol(argv[2],NULL,0);	//parse second command line element as long key		
+		inf.open(fn.c_str());			//open input file
+	}
+	else
+	{
+		cout << endl << "Please Enter Encryption Key: ";	//prompt user for encryption key
+		cin >> key;											//get key from cin
+	}
+	
+	
+	while(!inf.is_open()) //while either of the files isn't properly open
+	{
+		cout << endl << "Please Enter Valid Filename To xOr-Crypt: ";	//prompt user for a filename
+		cin >> fn;				//take fn_orig from cin
+		inf.open(fn.c_str());	//open input file
+	}
+	
+	loc = fn.find(".enc");		//check if file already contains .enc extension
+	if(loc != string::npos)		//if it is found--
+	{
+		fn.replace(loc,4,".orig");	// --replace last .enc with .orig
+	}
+	else
+	{
+		fn += ".enc";				//encrypted name is same as original plus .enc
+	}
+	outf.open(fn.c_str());			//open output file
+	
+	while(inf) //while input file hasn't reached EOF
+	{
+		inf.get(tmp); 	//get the next character
+		if(inf)			//if file is still not at EOF
+		{
+			if(xorcrypt(tmp,key) != EOF)		//as long as the char encrypted by the key isn't illegal
+			{
+				outf.put(xorcrypt(tmp,key));	//place encrypted char into output file
+			}
+			else
+			{
+				inf.close();		//close input file
+				outf.close();		//close output file
+				fn = "del " + fn;	//add "del " to beginning of current filename
+				system(fn.c_str());	//execute delete command
+				error(); 			//report error and exit
+			}
+		}
+	}
+	
+	inf.close();	//close input file
+	outf.close();	//close output file
+	
+	return 0;
+}
+/*
+XOR.cpp
+Matthew Costuros
+snoborder420@yahoo.com
+AIM: Rpi Matty
+Proper usage is XOR.exe filename Key
+Encrypt the file with a key 324
+XOR.exe plain.txt 324
+Decrypt that file
+XOR.exe plain.enc  324
+Encrypt a top secret file
+XOR.exe keepsafe.txt 56765
+Decrypt that secret file
+XOR.exe keepsafe.end 56765
+*/
+#include <iostream.h>
+#include <string.h>
+#include <stdio.h>
+int XOR(char * filename, unsigned long key);
+int main(int argv, char ** argc)
+{
+	unsigned long key;
+	char filename[100];
+	//if they used command line arguments pass the filename and key to xor function
+	if( argv == 3)
+	{
+		if( XOR(argc[1],(unsigned int)atol(argc[2]) ) )
+		{
+			cout << "There was an error trying to encrypt/decrypt the file " <<  argc[1] << endl;
+		}
+	}
+	//other wise prompt for the key and filename
+	else
+	{
+		cout << "What is the filename?" << endl;
+		cin.getline(filename,99,'\n');
+	
+		cout << "What is the key?" << endl;
+		cin >> key;
+		
+		//tell the user about command line then call xor function
+		cout << "Next time you can use the command line, the format is " << argc[0] << " filename key" << endl;
+		if( XOR(filename,key) )
+		{
+			cout << "There was an error trying encrypt/decrpyt the file " << filename << endl;
+		}
+	}
+	return 0;
+}
+int XOR(char * filename, unsigned long key)
+{
+	FILE * input = NULL , *output = NULL;
+	char * outfilename = NULL;
+	int len = strlen(filename);
+	unsigned char buffer;
+	if( (filename[len-4] == '.') && (filename[len-3] == 'e') && (filename[len-2] == 'n') && (filename[len-1] == 'c') )
+	{
+		// our input file is encoded then we will create a file without the .end extension
+		outfilename = new char[len+1]; //make room for the name+\0
+		strcpy(outfilename,filename); //copy the string name
+		outfilename[len-4] = '\0'; //put the \0 before the .enc extension to cut it off
+	}
+	else
+	{
+		outfilename = new char[len+5]; //make room for the name + .enc + \0
+		strcpy(outfilename,filename); //copy the file name
+		strncat(outfilename,".enc",4); //add the .enc extension
+	}
+	input =	fopen(filename,"rb");
+	if( input == NULL)
+	{
+		cout << "Error opening file " << filename << endl;
+		delete [] outfilename; //free the memory before leaving
+		outfilename = NULL;
+		return 1;
+	}
+	
+	output = fopen(outfilename,"wb");
+	if( output == NULL )
+	{
+		cout << "Error creating output file " << outfilename << endl;
+		delete [] outfilename; //free the mem before leaving
+		outfilename = NULL;
+		return 1;
+	}
+	while( ! feof(input) )
+	{
+		//get some data
+		if( fread(&buffer,sizeof(unsigned char),1,input) != 1 )
+		{
+			//if we didnt get any data, but we are not at the eof, then an error has occured
+			if( ! feof(input) )
+			{
+				delete [] outfilename;
+				outfilename = NULL;
+				fclose(input);
+				fclose(output);
+				
+				return 1;
+			}
+		}
+		else
+		{
+			//xor that data
+			buffer ^= key; 
+		
+			//write some data
+			fwrite(&buffer,sizeof(unsigned char),1,output);
+		}
+	}
+	//close the files and free that memory
+	fclose(input);
+	fclose(output);
+	delete [] outfilename;
+	return 0;
+}
+
+/*
+
+  This is program for Encryption and Decryption
+  This program uses the Simple Data Encryption Standard (SDES) Algorithm.
+  This Algo takes 8-bits of plaintext at a time and produces 8-bits of ciphertext.
+  It uses 10-bits of key for Encryption and Decryption.
+  
+  Developed by : Vivek Kumar (alldogblue@yahoo.co.in)
+                 
+   Created on : 31 March 2005
+   Last Modified on : 10 April 2005
+
+   Any sort of suggetions/comments are most welcome on alldogblue@yahoo.co.in
+
+*/
+
+#include<iostream.h>
+#include<stdio.h>
+#include<conio.h>
+#include<string.h>
+#include<stdlib.h>
+#include<assert.h>
+
+void mainmenu(int *);
+void menuEn(char*,char*,char*);
+void menuDe(char*,char*,char*);
+int DoEnDe(char*,char*,char*,int);
+class SDES
+{
+  private:
+	char KEY[11],K1[9],K2[9],IPOutput[9],InvIPOutput[9];
+	char F1Output[9],F2Output[9];
+
+	char INPUT_BIT[9],OUTPUT_BIT[9];
+
+  public:
+   unsigned char INPUT,OUTPUT;
+
+   SDES(char *key);
+   ~SDES();
+   void GenerateKeys();
+   char *Left_Shift(char *,int );
+   void conv_to_bits(unsigned char );
+   void IP(char *);
+   void InvIP(char *);
+   void DES_Encryption(unsigned char );
+   void DES_Decryption(unsigned char );
+   void Function_F(char *,char *,int );
+   char *EX_OR(char *,int );
+   char *SBOX0(char *);
+   char *SBOX1(char *);
+   void SDES::GetChar();
+};
+	SDES::SDES(char *key)  //Initializes the object with 10-bits key
+	{
+	 int i;
+	 if(strlen(key)!=10)  //Checks for valid length key
+	 {
+		printf("\nInValid Key-Length %s %d",key,strlen(key));
+		getch();
+		exit(1);
+	 }
+	 for(i=0;i<10;i++)  //Assigning the key privatly
+	 {
+		KEY[i]=key[i];
+	 }
+	 KEY[10]='\0';
+	 GenerateKeys(); //Key Genaration Starts. Output: (K1/K2)
+
+	}
+
+	void SDES::GenerateKeys()
+	{
+	 int P10[10]={3,5,2,7,4,10,1,9,8,6};  //P10 permutation-array
+	 char P10_OP[11];    //Output of P10 is to be stored here
+	 int P8[8]={6,3,7,4,8,5,10,9}; //P8 permutation-array
+	 char *P10LEFT,*pl,*pl1,*P10RIGHT,*pr,*pr1,*plpr;
+	 int i;
+
+	 /*P10 operation is done on main key*/
+	 for(i=0;i<10;i++)
+	  P10_OP[i]=KEY[P10[i]-1];
+
+	 P10_OP[10]='\0';
+
+	 /*Dividing 10-bit output of P10 operation into
+	   two parts*/
+	 for(i=0;i<5;i++)
+	 {
+		P10LEFT[i]=P10_OP[i];
+		P10RIGHT[i]=P10_OP[i+5];
+	 }
+	P10LEFT[5]='\0';
+	P10RIGHT[5]='\0';
+
+	pl=new char[6];
+	pr=new char[6];
+
+	/*Perform Left-Circular shift by 1 bit on the
+	  two parts of P10 output*/
+	pl=Left_Shift(P10LEFT,1);
+	pr=Left_Shift(P10RIGHT,1);
+
+	/*Combine the above two parts after
+	  the left-cicular operation into 'plpr' string*/
+	for(i=0;i<5;i++)
+	{
+		plpr[i]=pl[i];
+		plpr[i+5]=pr[i];
+	}
+	plpr[10]='\0';
+
+	/*Performing P8 Operation on plpr and assigning to K1*/
+	for(i=0;i<8;i++)
+		K1[i]=plpr[P8[i]-1];
+
+	K1[8]='\0'; //This is our first sub-key K1
+
+	/*Again performing Left-Circular-Shift(LCS) by 2 bits on
+	  the output of previous Left-Cicular-Shift(LCS)*/
+	pl1=Left_Shift(pl,2);
+	pr1=Left_Shift(pr,2);
+
+	/*Combining the output of above LCS2 into 1 string*/
+	for(i=0;i<5;i++)
+	{
+		plpr[i]=pl1[i];
+		plpr[i+5]=pr1[i];
+	}
+	plpr[10]='\0';
+
+	/*Again performing P8 operation on the above combined
+	  string*/
+	for(i=0;i<8;i++)
+	{
+		K2[i]=plpr[P8[i]-1];
+	}
+	K2[8]='\0'; //This is our second sub-key K2
+
+	}
+
+	/*Method to perform Left-Circular-Shift on bit-string*/
+	char *SDES::Left_Shift(char *bs,int n)
+	{
+	 int length=strlen(bs);
+	 char *char_ptr,firstbit,*str;
+
+	 char_ptr = new char[length +1];
+	 str=new char[length+1];
+	 char_ptr=bs;
+
+	 int i,j;
+	 for(j=0;j<n;j++)
+	 {
+		firstbit=char_ptr[0];
+
+		for(i=0;i<length-1;i++)
+		{
+			str[i]=char_ptr[i+1];
+		}
+		str[length-1]=firstbit;
+		char_ptr[length]='\0';
+		char_ptr=str;
+	 }
+	 char_ptr[length]='\0';
+	 return(str);
+	}
+
+	/*Method to convert unsigned char to bit-string
+	  For Ex. 1="00000001"*/
+	void SDES::conv_to_bits(unsigned char ch)
+	{
+	 int i,bit;
+	 INPUT_BIT[8]='\0';
+	 for(i=7;i>=0;i--)
+	 {
+		bit=ch%2;
+		ch=ch/2;
+
+		if(bit!=0)
+			INPUT_BIT[i]='1';
+		else
+			INPUT_BIT[i]='0';
+	 }
+
+	}
+
+	/*Method to perform Initial-Permutation*/
+	void SDES::IP(char *input)
+	{
+	 int IPArray[8]={2,6,3,1,4,8,5,7};
+	 int i;
+	 IPOutput[8]='\0';
+	 for(i=0;i<8;i++)
+	 {
+		IPOutput[i]=input[IPArray[i]-1];
+	 }
+	}
+
+	/*Method to perform Inverse of Initial-Permutation*/
+	void SDES::InvIP(char *input)
+	{
+	 int InvIPArray[8]={4,1,3,5,7,2,8,6};
+	 int i;
+	 InvIPOutput[8]='\0';
+	 for(i=0;i<8;i++)
+	 {
+		InvIPOutput[i]=input[InvIPArray[i]-1];
+	 }
+	}
+
+	/*Method to perform SDES-Encryption on 8-bit 'input'*/
+	void SDES::DES_Encryption(unsigned char input)
+	{
+	  char LIP[5],RIP[5],L1[5],R1[5];
+	  int i;
+
+	  INPUT=input;
+	  conv_to_bits(INPUT);  //Converts the input to bit-string
+	  IP(INPUT_BIT);        //Initial-Permutation
+
+	  gotoxy(1,1);
+	  printf("\nEncrpyting.........");
+
+	  /*Dividing the output of IP into 2 parts*/
+	  for(i=0;i<4;i++)
+	  {
+		LIP[i]=IPOutput[i];
+		RIP[i]=IPOutput[i+4];
+	  }
+	  LIP[4]='\0';
+	  RIP[4]='\0';
+
+	  /*Sending the above divided parts to Function_F and  sub-key K1*/
+	  Function_F(LIP,RIP,1);
+
+	  /*Dividing the output of the Function_F into 2 parts*/
+	  for(i=0;i<4;i++)
+	  {
+		L1[i]=F1Output[i];
+		R1[i]=F1Output[4+i];
+	  }
+	  L1[4]='\0';
+	  R1[4]='\0';
+
+	  /*This time the string-parameters swaped and uses sub-key K2*/
+	  Function_F(R1,L1,2);
+
+	  /*Performing the Inverse IP on the output of the Funtion_F*/
+	  InvIP(F1Output); //The output of the function will give us
+			   //Cipher-string
+
+	  /*Cipher string is converted back to unsigned char and stored
+	    in private-variable OUTPUT of this class*/
+	  GetChar();
+	}
+
+
+	/*Decryption is just inverse of Encryption
+	  Here IP, InvIP, E/P, SBOX1 and SBOX2 are same
+	  But Function_F first operats on sub-key K2 and
+	  then on sub-key K1*/
+	void SDES::DES_Decryption(unsigned char input)
+	{
+	  char LIP[5],RIP[5],L1[5],R1[5];
+	  int i;
+
+	  INPUT=input;
+	  conv_to_bits(INPUT);
+	  IP(INPUT_BIT);        //Initial-Permutation
+
+	  gotoxy(1,1);
+	  printf("\nDecrpyting.........");
+
+	  for(i=0;i<4;i++)
+	  {
+		LIP[i]=IPOutput[i];
+		RIP[i]=IPOutput[i+4];
+	  }
+	  LIP[4]='\0';
+	  RIP[4]='\0';
+
+	  Function_F(LIP,RIP,2);
+
+	  for(i=0;i<4;i++)
+	  {
+		L1[i]=F1Output[i];
+		R1[i]=F1Output[4+i];
+	  }
+	  L1[4]='\0';
+	  R1[4]='\0';
+
+	  Function_F(R1,L1,1);
+	  InvIP(F1Output);
+	  GetChar();
+	}
+
+	void SDES::Function_F(char *linput,char *rinput,int key)
+	{
+	 int E_P[8]={4,1,2,3,2,3,4,1}; //E/P Operation-Array
+	 int P4[4]={2,4,3,1};          //P4 Operation-Array
+	 int i;
+	 char E_POutput[9],*EXOR_Output,*LEXOR,*REXOR;
+	 char *SBOX0_Output,*SBOX1_Output;
+	 char SBOX_Output[5];
+	 char P4_Output[5];
+	 char fk_Output[5];
+	 char Main_Output[9];
+
+	 /*E/P Operaion is performed here*/
+	 for(i=0;i<8;i++)
+	 {
+	  E_POutput[i]=rinput[E_P[i]-1];
+	 }
+	 E_POutput[8]='\0';
+
+	 /*Bitwise-EXOR is done on E/P Output and sub-key(K1/K2)*/
+	 EXOR_Output=EX_OR(E_POutput,key);
+
+	 /*Divide the output of Exor in 2 parts*/
+	 LEXOR=new char[strlen(EXOR_Output)/2+1];
+	 REXOR=new char[strlen(EXOR_Output)/2+1];
+
+	 for(i=0;i<strlen(EXOR_Output)/2;i++)
+	 {
+	  LEXOR[i]=EXOR_Output[i];
+	  REXOR[i]=EXOR_Output[i+4];
+	 }
+	 LEXOR[4]=REXOR[4]='\0';
+
+
+	 /*Peforming SBOX0 Operation on left 4 bits*/
+	 SBOX0_Output=SBOX0(LEXOR);
+
+	 /*Peforming SBOX1 Operation on right 4 bits*/
+	 SBOX1_Output=SBOX1(REXOR);
+
+	 /*Combining the 2-bits output of both SBOXES in one string*/
+	 for(i=0;i<2;i++)
+	 {
+	  SBOX_Output[i]=SBOX0_Output[i];
+	  SBOX_Output[i+2]=SBOX1_Output[i];
+	 }
+	 SBOX_Output[4]='\0';
+
+	 /*Performing the P4 operation on SBOX output*/
+	 for(i=0;i<4;i++)
+	 {
+	  P4_Output[i]=SBOX_Output[P4[i]-1];
+	 }
+	 P4_Output[4]='\0';
+
+	 /*Performing the EXOR operation on 4-bits P4-output
+	   and 4-bits Leftinput of Funtion_F*/
+	 for(i=0;i<4;i++)
+	 {
+	  if(P4_Output[i]==linput[i])
+	   fk_Output[i]='0';
+	  else
+	   fk_Output[i]='1';
+	 }
+	 fk_Output[4]='\0';
+
+	 /*Cancating the 4-bits output of above EXOR-operation
+	   and 4-bits Right-input of Function_F*/
+	 for(i=0;i<4;i++)
+	 {
+	  Main_Output[i]=fk_Output[i];
+	  Main_Output[i+4]=rinput[i];
+	 }
+	 Main_Output[8]='\0';
+	 /*Assigning this Cucaneted string to Private variable 'F1Output'*/
+	 strcpy(F1Output,Main_Output);
+	}
+
+	/*This method EXORS the output ofE/P and sub-keys
+	  depending on the parameter k.
+	  k=1:subkey K1  k=2:subkey K2*/
+	char *SDES::EX_OR(char *ep,int k)
+	{
+	 char *output,*key;
+	 int i,klen;
+
+	 output=new char[strlen(ep)+1];
+	 key=new char[strlen(K1)+1];
+	 if(k==1)
+	 {
+	  strcpy(key,K1);
+	 }
+	 else
+	 {
+	  if(k==2)
+	  {
+	   strcpy(key,K2);
+	  }
+	  else
+	  {
+	   printf("\n\nWrong Choice in the key parameter(1/2)");
+	   getch();
+	   exit(1);
+	  }
+	 }
+	 klen=strlen(K1);
+	 if(strlen(ep)!=klen)
+	 {
+	  printf("\ninput=%d is not equal to K=%d",strlen(ep),klen);
+	  printf("\n\nError in the Output of E/P (Length)..Press any key");
+	  getch();
+	  exit(1);
+	 }
+	 for(i=0;i<strlen(ep);i++)
+	 {
+	  if(ep[i]==key[i])
+	   output[i]='0';
+	  else
+	   output[i]='1';
+	 }
+	 output[strlen(ep)]='\0';
+	 return(output);
+	}
+
+	/*SBOX0 Operation is defined here*/
+	char *SDES::SBOX0(char *l)
+	{
+	 int S0[4][4]={1,0,3,2,  //S0 Matrix
+		       3,2,1,0,
+		       0,2,1,3,
+		       3,1,3,2
+		       };
+
+	 char *bits[]={"00","01","10","11"};
+	 char lrow[3],lcol[3];
+	 char *SO;
+	 int i,lr,lc,b;
+
+	 SO=new char[3];
+
+	 lrow[0]=l[0];
+	 lrow[1]=l[3];
+	 lcol[0]=l[1];
+	 lcol[1]=l[2];
+
+	 lrow[2]='\0';
+	 lcol[2]='\0';
+
+
+	 for(i=0;i<4;i++)
+	 {
+	  if(strcmp(lrow,bits[i])==0)
+	   lr=i;
+	  if(strcmp(lcol,bits[i])==0)
+	   lc=i;
+	 }
+	 b=S0[lr][lc];
+	 for(i=0;i<3;i++)
+	  SO[i]=bits[b][i];
+	 SO[3]='\0';
+	 return(SO);
+	}
+	/*SBOX1 Operation is defined here*/
+	char *SDES::SBOX1(char *l)
+	{
+	 int S0[4][4]={0,1,2,3,   //S1 Matrix
+		       2,0,1,3,
+		       3,0,1,0,
+		       2,1,0,3
+		       };
+
+	 char *bits[]={"00","01","10","11"};
+	 char lrow[3],lcol[3];
+	 char *SO;
+	 int i,lr,lc,b;
+
+	 SO=new char[3];
+
+	 lrow[0]=l[0];
+	 lrow[1]=l[3];
+	 lcol[0]=l[1];
+	 lcol[1]=l[2];
+
+	 lrow[2]='\0';
+	 lcol[2]='\0';
+
+
+	 for(i=0;i<4;i++)
+	 {
+	  if(strcmp(lrow,bits[i])==0)
+	   lr=i;
+	  if(strcmp(lcol,bits[i])==0)
+	   lc=i;
+	 }
+	 b=S0[lr][lc];
+	 for(i=0;i<3;i++)
+	  SO[i]=bits[b][i];
+
+	 SO[3]='\0';
+	 return(SO);
+	}
+
+	/*Method to get back unsigned char from bit-string*/
+	void SDES::GetChar()
+	{
+	   int i,j,in;
+	   unsigned char ch=0;
+	   char *bs;
+	   bs=new char[9];
+	   bs=InvIPOutput;
+	   if(strlen(bs)>8)
+	   {
+	    printf("\nWRONG LENGTH STRING");
+	    exit(0);
+	   }
+	   for(i=0;i<8;i++)
+	   {
+	    if(bs[i]=='1')
+	    {
+	     in=1;
+	     for(j=1;j<8-i;j++)
+	     {
+	       in=in*2;
+	     }
+	     ch=ch+in;
+	    }
+	   }
+	   OUTPUT=ch;
+	  }
+
+	/*Destructor*/
+	SDES::~SDES()
+	{
+	}
+
+
+void main(void)
+{
+ clrscr();
+ unsigned char ch,ch1;
+ int i,n=10,choice;
+ char *key;//="1010000010";
+ char *sfname,*tfname;
+ while(1)
+ {
+  key = new char[11];
+  sfname = new char[20];
+  tfname = new char[20];
+  mainmenu(&choice);
+  fflush(stdin);
+  switch(choice)
+  {
+   case 1:
+	 menuEn(tfname,sfname,key);
+	 DoEnDe(tfname,sfname,key,choice);
+	 break;
+   case 2:
+	 menuDe(tfname,sfname,key);
+	 DoEnDe(tfname,sfname,key,choice);
+	 break;
+   case 3:
+	 exit(0);
+   default:
+	 printf("\nWrong Choice Enter again\nPress any key to return to Main Menu..");
+	 getch();
+	 break;
+  }
+ }
+}
+
+void mainmenu(int *c)
+{
+  clrscr();
+  printf("\nWhat do you want to do..");
+  printf("\n1. Encryption");
+  printf("\n2. Decryption");
+  printf("\n3. Exit");
+  printf("\n\nEnter the choice? ");
+  scanf("%d",c);
+}
+void menuEn(char *t,char *s,char *k)
+{
+ clrscr();
+ printf("\nEncryption Menu\n\n");
+ printf("\nEnter the filename to be Encrypted: ");
+ gets(s);
+ printf("\nEnter the Target file name: ");
+ gets(t);
+ printf("\nEnter the 10-bits KEY: ");
+ gets(k);
+ printf("\n\nNotedown this key, as same key is used for Decryption");
+ //getch();
+}
+void menuDe(char *t,char *s,char *k)
+{
+ clrscr();
+ printf("\nDecryption Menu\n\n");
+ printf("\nEnter the filename to be Decrypted: ");
+ gets(s);
+ printf("\nEnter the Target file name: ");
+ gets(t);
+ printf("\nEnter the 10-bits KEY: ");
+ gets(k);
+}
+
+int DoEnDe(char *t,char *s,char *k,int c)
+{
+
+ printf("\n\nTarget = %s Source = %s key = %s choice = %d",t,s,k,c);
+
+ SDES S(k);
+ int i,n;
+ n=10; //Number of Rounds
+ unsigned char ch;
+ FILE *fp,*ft;
+ fp=fopen(t,"wb");
+ ft=fopen(s,"rb");
+ if(fp==NULL||ft==NULL)
+ {
+  printf("\nFile not opened SORRY");
+  getch();
+  fclose(ft);
+  fclose(fp);
+  return(0);
+ }
+ while(fread(&ch,1,1,ft)==1)
+ {
+  S.OUTPUT=ch;
+
+  for(i=0;i<n;i++)
+  {
+   if(c==1)
+    S.DES_Encryption(S.OUTPUT);
+   if(c==2)
+    S.DES_Decryption(S.OUTPUT);
+  }
+  fwrite(&S.OUTPUT,1,1,fp);
+ }
+ printf("\nCompleted!!!!!");
+ getch();
+ fclose(fp);
+ fclose(ft);
+ return(1);
+}
+
+#include <iostream.h>
+#include <iomanip.h>
+#include <stdlib.h>
+#include <time.h>
+const c=10;
+void inputa(int a[ ]);
+void outputa(int a[ ]);
+void dosort(int a[ ]);
+void swap(int &x, int &y);
+void search(int a[ ]);
+int dosearch(int a[ ], int b);
+int main()
+{
+	int a[c];
+	time_t seconds;
+	time(&seconds);
+	srand((unsigned int) seconds);
+	inputa(a);
+	outputa(a);
+	cout<<endl;
+	dosort(a);
+	outputa(a);
+	search(a);
+	return 0;
+}
+void inputa(int a[ ])
+{
+	int i;
+	for(i=0; i<c;i++)
+	{
+		a[i]=rand()%101;
+	}
+}
+void outputa(int a[ ])
+{
+	int pig;
+	for(pig=0; pig<c;pig++)
+	{
+		cout<<a[pig]<<endl;
+	}
+}
+void dosort(int a[ ])
+{
+	int j, pig;
+	for(pig=0;pig<c;pig++)
+	{
+		for(j=0;j<c;j++)
+		{
+			if (a[j]>a[pig])
+			{
+				swap(a[j],a[pig]);
+			}
+		}
+	}
+}
+void swap(int &a, int &b)
+{
+	int temp;
+	temp=a;
+	a=b;
+	b=temp;
+}
+void search(int a[ ])
+{
+	int b;
+	cout<<"Enter Number to Search for: ";
+	cin>>b;
+	dosearch(a,b);
+	cout<<"The number was found in line number "<<dosearch(a,b)<<endl;
+}
+int dosearch(int a[ ], int b)
+{
+	int high=c;
+	int mid=c/2;
+	int low=-1;
+	int d=0;
+	int line=0;
+	do
+	{
+		if(b>a[mid])
+		{
+			low=mid+1;
+			mid=(high+low)/2;
+		}
+		else if (b<a[mid])
+		{
+			high=mid+1;
+			mid=(high+low)/2;
+		}
+		else if(a[mid]==b)
+		{
+			return mid+1;
+		}
+	}while(low<high);
+	return -1;
+}
+
+//Procedural Programming technique shows creation of Pascal's Triangl
+#include <iostream>
+#include <iomanip>
+using namespace std;
+int** comb(int** a , int row , int col)
+{
+   int mid = col/2;
+        //clear matrix
+         for( int i = 0 ; i < row ; i++)
+         for( int j = 0 ; j < col ; j++)
+                a[i][j] = 0;
+                a[0][mid] = 1; //put 1 in the middle of first row
+    //build up Pascal's Triangle matrix
+     for( int i = 1 ; i < row ; i++)
+        {
+          for( int j = 1 ; j < col - 1 ; j++)
+               a[i][j] = a[i-1][j-1] + a[i-1][j+1];
+        }
+   return a;
+}
+void disp(int** ptr, int row, int col)
+{
+  cout << endl << endl;
+    for ( int i = 0 ; i < row ; i++)
+        {
+        for ( int j = 0 ; j < col ; j++)
+            {
+                if( ptr[i][j] == 0)
+                cout << "   ";
+                else
+                cout << setw(4) << right << ptr[i][j];
+            }
+            cout << endl;
+        }
+    cout << endl << endl;
+}
+int main()
+{
+    int **ptr, m, n;
+    cout << "\nEnter number of rows to draw Pascal's Triangle: ";
+    cin >> m;
+    n = 2 * m + 1; //column = 2 * row + 1
+ 
+    ptr = new int*[m];
+    for( int i = 0 ; i < m ; i++)
+        ptr[i] = new int[n];
+ 
+        ptr = comb(ptr, m, n);//calling function for array creation
+ 
+        disp(ptr, m, n);//calling function for array displaying.
+ 
+    return 0;
+}
+#include <iostream>
+using namespace std;
+
+class figure {
+protected:
+  double x, y;
+public:
+  void set_dim(double i, double j=0) {
+    x = i;
+    y = j;
+  }
+  virtual void show_area() {
+    cout << "No area computation defined ";
+    cout << "for this class.\n";
+  }
+} ;
+
+class triangle : public figure {
+  public:
+    void show_area() {
+      cout << "Triangle with height ";
+      cout << x << " and base " << y;
+      cout << " has an area of ";
+      cout << x * 0.5 * y << ".\n";
+    }
+};
+
+class square : public figure {
+  public:
+    void show_area() {
+      cout << "Square with dimensions ";
+      cout << x << "x" << y;
+      cout << " has an area of ";
+      cout << x *  y << ".\n";
+    }
+};
+class circle : public figure {
+  public:
+    void show_area() {
+      cout << "Circle with radius ";
+      cout << x;
+      cout << " has an area of ";
+      cout << 3.14 * x * x << ".\n";
+    }
+} ;
+
+int main()
+{
+  figure *p; // create a pointer to base type
+
+  triangle t; // create objects of derived types
+  square s;
+  circle c;
+
+  p = &t;
+  p->set_dim(10.0, 5.0);
+  p->show_area();
+
+  p = &s;
+  p->set_dim(10.0, 5.0);
+  p->show_area();
+
+  p = &c;
+  p->set_dim(9.0);
+  p->show_area();
+
+  return 0;
+}
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class B_class {
+  char author[80];
+public:
+  void put_author(char *s) { strcpy(author, s); }
+  void show_author() { cout << author << "\n"; }
+} ;
+
+class D_class : public B_class {
+  char title[80];
+public:
+  void put_title(char *num) {
+    strcpy(title, num);
+  }
+  void show_title() {
+    cout << "Title: ";
+    cout <<  title << "\n";
+  }
+};
+
+int main()
+{
+  B_class *p;
+  B_class B_ob;
+
+  D_class *dp;
+  D_class D_ob;
+
+  p = &B_ob;  // address of base
+
+  // Access B_class via pointer.
+  p->put_author("Tom Clancy");
+
+  // Access D_class via base pointer.
+  p = &D_ob;
+  p->put_author("William Shakespeare");
+
+  // Show that each author went into proper object.
+  B_ob.show_author();
+  D_ob.show_author();
+  cout << "\n";
+
+  /* Since put_title() and show_title() are not part
+     of the base class, they are not accessible via
+     the base pointer p and must be accessed either
+     directly, or, as shown here, through a pointer to the
+     derived type.
+  */
+  dp = &D_ob;
+  dp->put_title("The Tempest");
+  p->show_author(); // either p or dp can be used here.
+  dp->show_title( );
+
+  return 0;
+}
+
+#include <iostream>  // need this header file to support the C++ I/O system
+using namespace std; // telling the compiler to use namespace "std",
+		     // where the entire C++ library is declared.
+	
+int main()
+{
+        // Print out a sentence on the screen.
+        // "<<" causes the expression on its right to 
+        // be directed to the device on its left.
+        // "cout" is the standard output device -- the screen.
+	cout << "Hello World!" <<  endl;
+	return 0; // returns 0,which indicate the successful	
+		  // termination of the "main" function 
+		     
+}
+
+#include <iostream>
+using namespace std;
+// declaring a constant.  It's value cannot be changed.
+const int CONST_VAL = 5;        
+int main()
+{
+	int    iValue;  // An integer variable
+	float  fValue;  // A floating point variable
+	char   cValue;  // A character variable
+	
+	iValue = 1234;    // Assigns 1234 to iValue
+	fValue = 1234.56; // Assigns 1234.56 to fValue
+	cValue = 'A';     // Assigns A to cValue
+	
+	// Now print them out on the screen:
+	cout << "Integer value is: " << iValue << endl;
+	cout << "Float value is: " << fValue <<  endl;
+	cout << "Character value is: " << cValue << endl;
+	cout << "The constant is: " << CONST_VAL << endl;
+	
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  float gallons, liters;
+
+  cout << "Enter number of gallons: ";
+  cin >> gallons; // Read the inputs from the user
+
+  liters = gallons * 3.7854; // convert to liters
+
+  cout << "Liters: " << liters << endl; 
+
+  return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	// declare an integer and a float variable
+	int IntNum; 
+	float FloatNum;
+	
+	// declare integer and float pointers
+	int *pIntNum;
+	float *pFloatNum;
+	
+	// initialize the integer and float variables
+	IntNum = 10;
+	FloatNum = 12.34;
+	
+	// store addresses in pointers
+	pIntNum = &IntNum;
+	pFloatNum = &FloatNum;
+
+	// print out the original values
+        cout << "Before increment: " << endl;
+	cout << "\t IntNum is: " << IntNum << endl;
+	cout << "\t FloatNum is: " << FloatNum << endl;
+	
+	// note that we need to dereference a pointer in order
+	// to extract the value it contains.
+	cout << "\t pIntNum contains: " << *pIntNum << endl;
+	cout << "\t pFloatNum contains: " << *pFloatNum << endl;
+
+	// increment values of the integer and float variables 
+	(*pIntNum)++;  // dereference and then increment
+	(*pFloatNum)++;
+
+	// print out the values after increment
+        cout << "After increment: " << endl;
+	cout << "\t IntNum is: " << IntNum << endl;
+	cout << "\t FloatNum is: " << FloatNum << endl;
+
+	cout << "\t pIntNum contains: " << *pIntNum << endl;
+	cout << "\t pFloatNum contains: " << *pFloatNum << endl;
+
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+class cl {
+  int i; // private by default
+public:
+  int get_i();
+  void put_i(int j);
+};
+
+int cl::get_i()
+{
+  return i;
+}
+
+void cl::put_i(int j)
+{
+  i = j;
+}
+
+int main()
+{
+  cl s;
+
+  s.put_i(10);
+  cout << s.get_i() <<endl;
+
+  return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+
+// Class to represent a box
+class Box
+{
+  public:
+    double length;
+    double breadth;
+    double height;
+
+    // Constructor
+    Box(double lengthValue, double breadthValue, double heightValue)
+    {
+      cout << "Box constructor called" << endl;
+      length = lengthValue;
+      breadth = breadthValue;
+      height = heightValue;
+    }
+
+    // Function to calculate the volume of a box
+    double volume()
+    {
+      return length * breadth * height;
+    }
+};
+
+#include <iostream>
+using namespace std;
+
+// Class to represent a box
+class Box
+{
+  public:
+    double length;
+    double breadth;
+    double height;
+
+    // Inline initialization
+    Box(double lv = 1.0, double bv = 1.0, double hv = 1.0):length(lv),
+                                                           breadth(bv),
+                                                           height(hv)
+    {
+      cout << "Box constructor called" << endl;
+    }
+
+    // Function to calculate the volume of a box
+    double volume()
+    {
+      return length * breadth * height;
+    }
+};
+
+int main()
+{
+  Box firstBox(80.0, 50.0, 40.0);
+
+  // Calculate the volume of the box
+  double firstBoxVolume = firstBox.volume();
+  cout << endl;
+  cout << "Size of first Box object is "
+       << firstBox.length  << " by "
+       << firstBox.breadth << " by "
+	<< firstBox.height
+       << endl;
+  cout << "Volume of first Box object is " << firstBoxVolume
+       << endl;
+
+  return 0;
+}
+
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class myclass {
+  int *p;
+public:
+  myclass(int i);
+  ~myclass();
+  int getval() { return *p; }
+};
+
+myclass::myclass(int i)
+{
+  cout << "Allocating p\n";
+  p = new int;
+  if(!p) {
+    cout << "Allocation failure.\n";
+    exit(1); // exit program if out of memory
+  }
+
+  *p = i;
+}
+
+myclass::~myclass()
+{
+  cout << "Freeing p\n";
+  delete p;
+}
+
+// when this function is called, the copy constructor is called
+void display(myclass ob)
+{
+  cout << ob.getval() << '\n';
+}
+
+int main()
+{
+  myclass a(10);
+
+  display(a);
+
+  return 0;
+}
+
+#include <iostream>
+#include <cstdlib>
+using namespace std;
+
+class myclass {
+  int *p;
+public:
+  myclass(int i);
+  ~myclass();
+  int getval() { return *p; }
+};
+
+myclass::myclass(int i)
+{
+  cout << "Allocating p\n";
+  p = new int;
+  if(!p) {
+    cout << "Allocation failure.\n";
+    exit(1); // exit program if out of memory
+  }
+
+  *p = i;
+}
+
+// use destructor to free memory
+myclass::~myclass()
+{
+  cout << "Freeing p\n";
+  delete p;
+}
+
+void display(myclass &ob)
+{
+  cout << ob.getval() << '\n';
+}
+int main()
+{
+  myclass a(10);
+
+  display(a);
+
+  return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int a, b;
+
+  cout << "Enter first number: ";
+  cin >> a;
+  cout << "Enter second number: ";
+  cin >> b;
+
+  if(a < b) 
+	  cout << "First number is less than second.\n";
+
+  return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  int a, b;
+
+  cout << "Enter first number: ";
+  cin >> a;
+  cout << "Enter second number: ";
+  cin >> b;
+
+  if(a < b) 
+	  cout << "First number is less than second.\n";
+  else
+	  cout << "First number is greater than or equal to second.\n";
+
+  return 0;
+
+}
+
+
+#include <iostream>
+// <cstdlib> is needed in order to use the rand().
+// For older compilers, use <stdlib.h>
+#include <stdlib.h> 
+using namespace std;
+
+int main()
+{
+  int magic;  // magic number
+  int guess;  // user's guess
+
+  magic = rand(); // get a random number
+  
+  cout << "Enter your guess: ";
+  cin >> guess;
+
+  if(guess == magic) 
+	  // Notice the "==" operator, which compares two values.   
+	  cout << "** Right **";
+  cout << "The magic number was: " << magic << endl;
+  return 0;
+}
+
+
+int main()
+{
+  int num;
+  double sq_root;
+
+  for(num=1; num < 10; num++) {
+    sq_root = sqrt((double) num); //casting num from integer to double 
+    				  // then taking its square root
+    cout << num << "  " << sq_root << '\n';
+  }
+
+  return 0;
+}
+
+#include <iostream>
+// <cstdlib> is needed in order to use the rand().
+// For older compilers, use <stdlib.h>
+#include <stdlib.h> 
+using namespace std;
+
+int main()
+{
+  int magic;  // magic number
+  int guess;  // user's guess
+
+  cout << "I will come up with a magic number between 0 and 9 ";
+  cout << "and ask you to guess it." << endl;
+
+  magic = rand()%10; // get a random number between 0 and 9
+  
+  cout << "Enter your guess: ";
+  cin >> guess;
+
+  while (guess != magic)  // as long as guess is incorrect
+  {
+	  if(guess > magic)
+	  {
+	          cout << "Too big! Guess again..." << endl;
+	  }
+	  else            // guess is less than magic
+	  {
+		  cout << "Too small! Guess again..." << endl;
+	  }
+	  cin >> guess;
+  }
+  cout << "You are RIGHT!" << endl;;
+  return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int choice;
+
+	cout << "Enter an integer number: 1 - 5 " ;
+	cin >> choice;
+
+	switch (choice)
+	{
+		case 1:
+		   cout << "You entered 1.";
+		   break;
+		case 2:
+		   cout << "You entered 2.";
+		   break;
+		case 3:
+		   cout << "You entered 3.";
+		   break;
+		case 4:
+		   cout << "You entered 4.";
+		   break;
+		case 5:
+		   cout << "You entered 5.";
+		   break;
+		default:
+		   cout << "Invalid input.";
+	}
+
+	return 0;
+
+}
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int sample[10]; // this reserves 10 integer elements
+	int t;
+
+	// load the array
+	for(t = 0; t < 10; t++)
+		sample[t] = t;
+
+	// display the array
+	for(t = 0; t < 10; ++t)
+		cout << sample[t] << ' ' ;
+	
+	return 0;
+}
+
+
+#include <iostream>
+#include <stdlib.h> //for newer compilers, include <cstdlib>
+using namespace std;
+
+int main()
+{
+	char name[32]; // big enough to hold 32 characters
+
+	// prompt for the name
+	cout << "What's your name?" << endl;
+	gets(name); // read a string from the key board.
+	cout << "Hello! " << name << "!"  << endl;
+
+	return 0;
+}
+
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+  // C++ allows for the initialization of arrays.  In the following,
+  // we are initializing a 10x2 integer array. After initialization,
+  // sqrs[0][0] = 1
+  // sqrs[0][1] = 1
+  // sqrs[1][0] = 2
+  // sqrs[1][1] = 4 
+  // and so on
+  int sqrs[10][2] = { 
+         {1, 1}, 
+	 {2, 4}, // The square of 2 is 4,and so on
+	 {3, 9}, 
+	 {4, 16}, 
+	 {5, 25}, 
+	 {6, 36}, 
+	 {7, 49}, 
+	 {8, 64}, 
+	 {9, 81}, 
+	 {10, 100} 
+  };
+
+  int i, j;
+
+  cout << "Enter a number between 1 and 10: ";
+  cin >> i;
+
+  // look up i
+  for(j = 0; j < 10; j++) 
+    if(sqrs[j][0] == i) break; // break from loop if i is found 
+  cout << "The square of " << i << " is " ;
+  cout << sqrs[j][1] << endl;
+
+  return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+// function prototyping
+int menu();    // funciton to display the menu
+void enter();  // function to enter info
+void report(); // function to print report
+
+// Global variables:
+char name[2][80];  // this array holds employee names
+char phone[2][20]; // their phone numbers
+float hours[2];    // hours worked per week
+float wage[2];     // wage
+int choice;
+
+int main()
+{
+  do {
+    choice = menu(); // get selection
+    switch(choice) {
+      case 0: break;
+      case 1: enter();
+        break;
+      case 2: report();
+        break;
+      default: cout << "Try again.\n\n";
+    }
+  } while(choice != 0);
+
+  return 0;
+}
+
+// Return a user's selection.
+int menu()
+{
+  int choice;
+
+  cout << "0. Quit\n";
+  cout << "1. Enter information\n";
+  cout << "2. Report information\n";
+  cout << "\nChoose one: ";
+  cin >> choice;
+
+  return choice;
+}
+
+// Enter information.
+void enter()
+{
+  int i;
+  for(i=0; i<2; i++) {
+    cout << "Enter last name: ";
+    cin >> name[i];
+    cout << "Enter phone number: ";
+    cin >> phone[i];
+    cout << "Enter number of hours worked: ";
+    cin >> hours[i];
+    cout << "Enter wage: ";
+    cin >> wage[i];
+  }
+}
+
+// Display report.
+void report()
+{
+  int i;
+
+  for(i=0; i<2; i++) {
+    cout << name[i] << ' ' << phone[i] << '\n';
+    cout << "Pay for the week: " << wage[i] * hours[i];
+    cout << '\n';
+  }
+}
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int Len, Wid;     // declare int variables
+
+	// Create references to int variables.
+        // Now rLen and Len are aliases to each other,
+        // and rWid and Wid are also aliases to each other.
+	int &rLen = Len;
+	int &rWid = Wid; 
+	
+	// Initialized the two int variables
+	Len = 10;         // rLen is also initialized to be 10
+	Wid = 20;         // rWid is also initialized to be 20
+
+	// Printing out the values for int and int references
+	cout << "Len is: " << Len << ", and  Wid is: " << Wid << endl;
+	cout << "rLen is: " << rLen << ", and rWid is: " << rWid << endl;
+	cout << endl;
+	
+	// Printing out the address of int and references to int
+	cout << "Address of Len is: " << &Len << endl;
+	cout << "Address of rLen is: "  << &rLen << endl;
+	if(&Len == &rLen)
+	{
+		cout << "Address of Len is equal to address of rLen!" << endl;
+	}
+	cout << "Address of Wid is: " << &Wid << endl;
+	cout << "Address of rWid is: "  << &rWid << endl;
+	if(&Wid == &Wid)
+	{
+		cout << "Address of Wid is equal to address of rWid!" << endl;
+	}
+
+	return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+void swap(int &i, int &j);  // function prototype for swapping two values
+
+int main()
+{
+	int NumOne = 0;
+	int NumTwo = 0;
+
+	cout << "Please enter two integers: " << endl;
+
+	cout << "Enter value for NumOne: " ;
+	cin >> NumOne;
+
+	cout << "Enter value for NumTwo: " ;
+	cin >> NumTwo;
+
+	cout << "Before swapping, NumOne is: " << NumOne << endl;
+	cout << "Before swapping, NumTwo is: " << NumTwo<< endl;
+
+	swap(NumOne, NumTwo);
+
+	cout << "After swapping, NumOne is: " << NumOne << endl;
+	cout << "After swapping, NumTwo is: " << NumTwo<< endl;
+
+	return 0;
+}
+
+// function definition for swap()
+
+void swap(int &i, int &j)
+{
+	int temp;
+
+	temp = i;
+	i = j;
+	j = temp;
+
+}
+
+#include <iostream>
+using namespace std;
+
+class base {
+  int i, j;
+public:
+  void set(int a, int b) { i = a; j = b; }
+  void show() { cout << i << " " << j << "\n"; }
+};
+
+// inheritance
+class derived : public base {
+  int k;
+public:
+  derived(int x) { k = x; }
+  void showk() { cout << k << "\n"; }
+};
+
+int main()
+{
+  derived ob(3);
+
+  ob.set(1, 2); // access member of base
+  ob.show();    // access member of base
+
+  ob.showk();   // uses member of derived class
+
+  return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+class base {
+protected:
+  int i, j; // private to base, but accessible to derived
+public:
+  void set(int a, int b) { i = a; j = b; }
+  void show() { cout << i << " " << j << "\n"; }
+};
+
+class derived : public base {
+  int k;
+public:
+  // derived may access base's i and j
+  void setk() { k = i*j; }
+
+  void showk() { cout << k << "\n"; }
+};
+
+int main()
+{
+  derived ob;
+
+  ob.set(2, 3); // OK, known to derived
+  ob.show();    // OK, known to derived
+
+  ob.setk();
+  ob.showk();
+
+  return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+class base {
+  int i;
+protected:
+  int j;
+public:
+  int k;
+  void seti(int a) { i = a; }
+  int geti() { return i; }
+};
+
+// Inherit base as protected.
+class derived : protected base {
+public:
+  void setj(int a) { j = a; } // j is protected here
+  void setk(int a) { k = a; } // k is also protected
+  int getj() { return j; }
+  int getk() { return k; }
+};
+
+int main()
+{
+  derived ob;
+
+  /* This next line is illegal because seti() is
+     a protected member of derived, which makes it
+     inaccessible outside of derived. */
+//  ob.seti(10);
+
+//  cout << ob.geti(); // illegal -- geti() is protected
+//  ob.k = 10; // also illegal because k is protected
+
+  // these next statements are OK
+  ob.setk(10);
+  cout << ob.getk() << ' ';
+  ob.setj(12);
+  cout << ob.getj() << ' ';
+
+  return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+class base1 {
+protected:
+  int x;
+public:
+  void showx() { cout << x << "\n"; }
+};
+
+class base2 {
+protected:
+  int y;
+public:
+  void showy() { cout << y << "\n"; }
+};
+
+// Inherit multiple base classes.
+class derived: public base1, public base2 {
+public:
+  void set(int i, int j) { x = i; y = j; }
+};
+
+int main()
+{
+  derived ob;
+
+  ob.set(10, 20); // provided by derived
+  ob.showx();     // from base1
+  ob.showy();     // from base2
+
+  return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+class base1 {
+protected:
+  int i;
+public:
+  base1(int x) { i = x; cout << "Constructing base1\n"; }
+  ~base1() { cout << "Destructing base2\n"; }
+};
+
+class base2 {
+protected:
+  int k;
+public:
+  base2(int x) { k = x; cout << "Constructing base2\n"; }
+  ~base2() { cout << "Destructing base2\n"; }
+};
+
+class derived: public base1, public base2 {
+  int j;
+public:
+  derived(int x, int y, int z): base1(y), base2(z)
+    { j = x; cout << "Constructing derived\n"; }
+
+  ~derived() { cout << "Destructing derived\n"; }
+  void show() { cout << i << " " << j << " " << k << "\n"; }
+};
+
+int main()
+{
+  derived ob(3, 4, 5);
+
+  ob.show();  // displays 4 3 5
+
+  return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	int number;
+	int abs_number;
+
+	// Ask for input
+	cout << "This program finds the absolute value of an integer." << endl;
+	cout << "Enter an integer (positive or negative): ";
+	cin >> number;
+	
+	// Find the absolute value
+	if(number >= 0)
+	{
+		abs_number = number;
+	}
+	else
+		abs_number = -number;
+	
+	// Print out output
+	cout << "The absolute value of " << number << " is " << abs_number;
+	cout << endl;
+	return 0;
+}
+
+int Abs(int i); // Function prototype
+int main()
+{
+	int number;
+	int abs_number;
+
+	cout << "This program finds the absolute value of an integer." << endl;
+	cout << "Enter an integer (positive or negative): ";
+	cin >> number;
+	
+	// Calling the function Abs()
+	abs_number = Abs(number);
+	cout << "The absolute value of " << number << " is " << abs_number;
+	cout << endl;
+	return 0;
+}
+// Function definition
+int Abs(int i)
+{
+	if( i >= 0)
+		return i;
+	else
+		return -i;
+}
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+	float num[5] = {1.0, -1.2345, 2350.1, 23.4, 45.34};
+	int i;
+
+ 	cout.setf(ios::showpos); // show the + sign before positive numbers
+  	cout.setf(ios::scientific); // use scientific notation
+  	cout.precision(2); // two digits after decimal point
+	
+	for(i = 0; i < 5; i++)
+	{
+  		cout.width(20);    // use 10 spaces for the number
+		cout.fill('$');    // pad with $
+  	    	cout << num[i] << endl;
+	}
+
+  return 0;
+}
+
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int main()
+{
+	float num[5] = {1.0, -1.2345, 2350.1, 23.4, 45.34};
+	int i;
+
+ 	cout << setiosflags(ios::showpos);
+	cout << setiosflags(ios::scientific); 
+	cout << setprecision(2); 
+	
+	for(i = 0; i < 5; i++)
+	{
+  		cout << setw(20);    
+  		cout << setfill('$');    
+  	    	cout << num[i] << endl;
+	}
+
+  return 0;
+}
+
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+// function prototype for a user-defined IO manipulator function
+ostream &SetHex(ostream &stream);
+
+int main()
+{
+	int input;
+	cout << "Enter an integer: " ;
+	cin  >> input;
+
+	cout << "Hexdecimal is: ";
+	
+	// call the SetHex function so that the input
+	// integer will be printed out in hexdecimal
+	cout << SetHex << input << endl;
+	return 0;
+}
+
+// definition of a user defined I/O manipulate function
+ostream &SetHex(ostream &stream)
+{
+	// Set output base to be hexdecimal.
+	// Use ios::basefield to make sure that all other
+	// field in basefield is cleared before setting it
+	// to hex.
+	stream.setf(ios::hex,ios::basefield); 
+	return stream;
+}
+
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main()
+{
+	char OutFile[80]; // output file name
+	ofstream OutStream;  // open an output stream
+	
+	cout << "Please enter output file name: " ;
+	cin >> OutFile;
+
+	OutStream.open(OutFile, ios::out | ios::trunc);
+	
+	// make sure file is successfully opened
+	if(!OutStream)
+	{
+		cout << "Error open file " << OutFile << " for writing\n";
+		return 1;
+	}
+	
+	// Write the following two lines to file
+	OutStream<<"It is easier to resist at the beginning than at the end.\n";
+	OutStream <<"                 -- Leonardo da Vinci" << endl;
+
+	OutStream.close(); // close output stream
+
+	cout << "Content written to " << OutFile <<".\n";
+
+	return 0;
+
+}
+
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+int main()
+{
+	char InFile[80];  // input file name
+	char ch;
+	
+	ifstream InStream;
+
+	cout << "This program reads the content of a file and ";
+	cout << "prints it out on the screen." << endl;
+
+	cout << "Enter input file name: " ;
+	cin >> InFile;
+
+	// Open file for input
+	// in.open(fin); also works
+	InStream.open(InFile, ios::in);
+
+	// ensure file is opened successfully
+	if(!InStream)
+	{
+		cout << "Error open file " << InFile << endl;
+		return 1;
+	}
+	
+	cout << "Here is the content of " << InFile << ":\n";
+	// Read in each character until eof character is read.
+	// Output it to screen.
+	while (!InStream.eof()) {
+		//Read each character.
+		InStream.get(ch);    
+
+		// make sure we don't write any odd characters on screen
+		if (!InStream.eof()) 
+		{
+			cout << ch;  //Write to screen
+		}
+	}
+
+	InStream.close();
+}
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+        // Defining a structure
+        struct PersonalData
+        {
+                char *FirstName;
+                char *LastName;
+                char *Birthday;  // in the format of 12/30/1978
+                int  PhoneNum;
+        }; // don't forget the ending ";"
+
+        // Declaring a variable of type PersonalData
+        PersonalData PersonOne;
+
+        // Populate PersonOne with data
+        PersonOne.FirstName = "John";
+        PersonOne.LastName = "Doe";
+        PersonOne.Birthday = "12/30/1978";
+        PersonOne.PhoneNum = 5855555;
+
+        // Print the data out
+        cout << "PersonOne's First name is: " << PersonOne.FirstName << endl;
+        cout << "PersonOne's Last name is: " << PersonOne.LastName<< endl;
+        cout << "PersonOne's Birthday is: " << PersonOne.Birthday<< endl;
+        cout << "PersonOne's Phone number is: " << PersonOne.PhoneNum<< endl;
+
+        return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+        // Defining a structure for name
+        struct Name
+        {
+                char *FirstName;
+                char *LastName;
+        };
+
+        struct PersonalData
+        {
+                Name NameField; // struct as a memeber
+                char *Birthday;  // in the format of 12/30/1978
+                int  PhoneNum;
+        }; // don't forget the ending ";"
+
+        // Declaring a variable of type PersonalData
+        PersonalData PersonOne;
+
+
+        PersonOne.NameField.FirstName = "John";
+        PersonOne.NameField.LastName = "Doe";
+
+        // Populate PersonOne with data
+        PersonOne.Birthday = "12/30/1978";
+        PersonOne.PhoneNum = 5855555;
+
+        // Print the data out
+        cout << "First name is: " << PersonOne.NameField.FirstName << endl;
+        cout << "Last name is: " << PersonOne.NameField.LastName<< endl;
+        cout << "Birthday is: " << PersonOne.Birthday<< endl;
+        cout << "Phone number is: " << PersonOne.PhoneNum<< endl;
+
+        return 0;
+}
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+        
+        struct PersonalData
+        {
+                char *FirstName;
+                char *LastName;
+                char *Birthday;  // in the format of 12/30/1978
+                int  PhoneNum;
+
+                // struc can also have member functions
+                void PrintDat()
+                {
+                        // Print the data out
+                        cout << "First name is: " << FirstName << endl;
+                        cout << "Last name is: " << LastName << endl;
+                        cout << "Birthday is: " << Birthday << endl;
+                        cout << "Phone number is: " << PhoneNum << endl;
+                }
+        }; // don't forget the ending ";"
+
+        // Declaring a variable of type PersonalData
+        PersonalData PersonOne;
+
+        // Populate PersonOne with data
+        PersonOne.FirstName = "John";
+        PersonOne.LastName = "Doe";
+        PersonOne.Birthday = "12/30/1978";
+        PersonOne.PhoneNum = 5855555;
+
+        PersonOne.PrintDat();
+        return 0;
+}
+
+#include <vector>
+#include <algorithm>
+#include <iterator>
+std::vector<int> target2(5);
+std::vector<int> target3;
+template <typename RangeOfInts>
+void foo(RangeOfInts source)
+{
+	std::vector<int> target1{std::begin(source),
+	                         std::end(source)};
+	std::copy(std::begin(source), std::end(source),
+	          std::begin(target2));
+	std::copy(std::begin(source), std::end(source),
+	          std::back_inserter(target3));
+}
+
+#include <array>
+#include <algorithm>
+#include <iterator>
+#include <functional>
+int main()
+{
+	std::array<int, 5> arr = {3, 4, 1, 5, 2};
+	std::sort(std::begin(arr), std::end(arr));
+	std::sort(std::begin(arr), std::end(arr),
+	          std::greater<int>{});
+}
+
+#include <algorithm>
+#include <utility>
+#include <vector>
+int main()
+{
+	std::vector<int> v1 = { 1, 3, 5, 7 };
+	std::vector<int> v2 = { 2, 4, 6, 8 };
+	std::swap_ranges(std::begin(v1), std::end(v1), std::begin(v2));
+	v1.swap(v2);
+	using std::swap;
+	swap(v1, v2);
+}
+
+#include <utility>
+class resource {
+	int x = 0;
+};
+class foo
+{
+	public:
+		foo()
+			: p{new resource{}}
+		{ }
+		foo(const foo& other)
+			: p{new resource{*(other.p)}}
+		{ }
+		foo(foo&& other)
+			: p{other.p}
+		{
+			other.p = nullptr;
+		}
+		foo& operator=(foo other)
+		{
+			swap(*this, other);
+			return *this;
+		}
+		~foo()
+		{
+			delete p;
+		}
+		friend void swap(foo& first, foo& second)
+		{
+			using std::swap;
+			swap(first.p, second.p);
+		}
+	private:
+		resource* p;
+};
+
+template<typename derived>
+class base
+{
+	public:
+		void do_something()
+		{
+			// ...
+			static_cast<derived*>(this)->do_something_impl();
+			// ...
+		}
+	private:
+		void do_something_impl()
+		{
+			// Default implementation
+		}
+};
+class foo : public base<foo>
+{
+	public:
+		void do_something_impl()
+		{
+			// Derived implementation
+		}
+};
+class bar : public base<bar>
+{ };
+template<typename derived>
+void use(base<derived>& b)
+{
+	b.do_something();
+}
+
+#include <tuple>
+class foo
+{
+	public:
+		foo(int n_, char c_, double d_)
+			: n{n_}, c{c_}, d{d_}
+		{}
+		friend bool operator<(const foo& lh, const foo& rh)
+		{
+			return std::tie(lh.n, lh.c, lh.d) <
+			       std::tie(rh.n, rh.c, rh.d);
+		}
+	private:
+		int n;
+		char c;
+		double d;
+};
+
+namespace ns
+{
+	class foo
+	{
+		public:
+			void member()
+			{
+				// Uses private data
+			}
+		private:
+			// Private data
+	};
+	void non_member(foo obj)
+	{
+		obj.member();
+	}
+}
+int main()
+{
+	ns::foo obj;
+	non_member(obj);
+}
+
+// foo.h - header file
+#include <memory>
+class foo
+{
+	public:
+		foo();
+		~foo();
+		foo(foo&&);
+		foo& operator=(foo&&);
+	private:
+		class impl;
+		std::unique_ptr<impl> pimpl;
+};
+// foo.cpp - implementation file
+class foo::impl
+{
+	public:
+		void do_internal_work()
+		{
+			internal_data = 5;
+		}
+	private:
+		int internal_data = 0;
+};
+foo::foo()
+	: pimpl{std::make_unique<impl>()}
+{
+	pimpl->do_internal_work();
+}
+foo::~foo() = default;
+foo::foo(foo&&) = default;
+foo& foo::operator=(foo&&) = default;
+
+#include <utility>
+class resource {
+	int x = 0;
+};
+class foo
+{
+	public:
+		foo()
+			: p{new resource{}}
+		{ }
+		foo(const foo& other)
+			: p{new resource{*(other.p)}}
+		{ }
+		foo(foo&& other)
+			: p{other.p}
+		{
+			other.p = nullptr;
+		}
+		foo& operator=(const foo& other)
+		{
+			if (&other != this) {
+				delete p;
+				p = nullptr;
+				p = new resource{*(other.p)};
+			}
+			return *this;
+		}
+		foo& operator=(foo&& other)
+		{
+			if (&other != this) {
+				delete p;
+				p = other.p;
+				other.p = nullptr;
+			}
+			return *this;
+		}
+		~foo()
+		{
+			delete p;
+		}
+	private:
+		resource* p;
+};
+
+#include <memory>
+#include <vector>
+class foo
+{
+	private:
+		int x = 10;
+		std::vector<int> v = {1, 2, 3, 4, 5};
+};
+class bar
+{
+	public:
+		std::unique_ptr<int> p = std::make_unique<int>(5);
+};
+
+#include <memory>
+class Base
+{
+public:
+	virtual ~Base() {}
+	virtual Base* clone() const = 0;
+};
+class Derived : public Base
+{
+public:
+	Derived* clone() const override
+	{
+		return new Derived(*this);
+	}
+};
+void foo(std::unique_ptr<Base> original)
+{
+	std::unique_ptr<Base> copy{original->clone()};
+}
+
+#include <cstddef>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+template<typename F, typename Tuple, size_t ...S >
+auto apply_tuple_impl(F&& fn, Tuple&& t, std::index_sequence<S...>)
+{
+	return std::forward<F>(fn)(std::get<S>(std::forward<Tuple>(t))...);
+}
+template<typename F, typename Tuple>
+auto apply_from_tuple(F&& fn, Tuple&& t)
+{
+	std::size_t constexpr tSize
+		= std::tuple_size<typename std::remove_reference<Tuple>::type>::value;
+	return apply_tuple_impl(std::forward<F>(fn),
+	                        std::forward<Tuple>(t),
+	                        std::make_index_sequence<tSize>());
+}
+int do_sum(int a, int b) 
+{
+	return a + b;
+}
+int main()
+{
+	int sum = apply_from_tuple(do_sum, std::make_tuple(10, 20));
+}
+
+#include <experimental/optional>
+using std::experimental::optional;
+using std::experimental::nullopt;
+void foo(int i,
+         optional<double> f,
+         optional<bool> b)
+{ }
+int main()
+{
+	foo(5, 1.0, true);
+	foo(5, nullopt, true);
+	foo(5, 1.0, nullopt);
+	foo(5, nullopt, nullopt);
+}
+
+#include <array>
+#include <experimental/dynarray>
+void compile_time(std::array<int, 3> arr)
+{ }
+void run_time(std::experimental::dynarray<int> arr)
+{ }
+int main()
+{
+	std::array<int, 3> arr = {4, 8, 15};
+	compile_time(arr);
+	compile_time({16, 23, 42});
+	std::experimental::dynarray<int> dynarr = {1, 2, 3};
+	run_time(dynarr);
+	run_time({1, 2, 3, 4, 5});
+}
+
+#include <tuple>
+std::tuple<int, bool, float> foo()
+{
+	return std::make_tuple(128, true, 1.5f);
+}
+int main()
+{
+	std::tuple<int, bool, float> result = foo();
+	int value = std::get<0>(result);
+	int obj1;
+	bool obj2;
+	float obj3;
+	std::tie(obj1, obj2, obj3) = foo();
+}
+
+#include <memory>
+class bar;
+class foo
+{
+public:
+	foo(const std::shared_ptr<bar>& b)
+		: forward_reference{b}
+	{ }
+private:
+	std::shared_ptr<bar> forward_reference;
+};
+class bar
+{
+public:
+	void set_back_reference(const std::weak_ptr<foo>& f)
+	{
+		this->back_reference = f;
+	}
+	void do_something()
+	{
+		std::shared_ptr<foo> shared_back_reference = this->back_reference.lock();
+		if (shared_back_reference) {
+			// Use *shared_back_reference
+		}
+	}
+private:
+	std::weak_ptr<foo> back_reference;
+};
+
+#include <vector>
+class foo
+{
+	public:
+		class builder;
+		foo(int prop1, bool prop2, bool prop3, std::vector<int> prop4)
+			: prop1{prop1}, prop2{prop2}, prop3{prop3}, prop4{prop4}
+		{ }
+		int prop1;
+		bool prop2;
+		bool prop3;
+		std::vector<int> prop4;
+};
+class foo::builder
+{
+	public:
+		builder& set_prop1(int value) { prop1 = value; return *this; };
+		builder& set_prop2(bool value) { prop2 = value; return *this; };
+		builder& set_prop3(bool value) { prop3 = value; return *this; };
+		builder& set_prop4(std::vector<int> value) { prop4 = value; return *this; };
+		foo build() const
+		{
+			return foo{prop1, prop2, prop3, prop4};
+		}
+	private:
+		int prop1 = 0;
+		bool prop2 = false;
+		bool prop3 = false;
+		std::vector<int> prop4 = {};
+};
+int main()
+{
+	foo f = foo::builder{}.set_prop1(5)
+	                      .set_prop3(true)
+	                      .build();
+}
+
+class foo
+{
+	public:
+		virtual void do_work() = 0;
+};
+class foo_concrete : public foo
+{
+	public:
+		virtual void do_work() override
+		{ }
+};
+class foo_decorator : public foo
+{
+	public:
+		foo_decorator(foo& f)
+			: f(f)
+		{ }
+		virtual void do_work() override
+		{
+			// Do something else here to decorate
+			// the do_work function
+			f.do_work();
+		}
+	private:
+		foo& f;
+};
+void bar(foo& f)
+{
+	f.do_work();
+}
+int main()
+{
+	foo_concrete f;
+	foo_decorator decorated_f{f};
+	bar(decorated_f);
+}

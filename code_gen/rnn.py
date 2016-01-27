@@ -148,16 +148,15 @@ while True:
 		targets = [char_to_ix[ch] for ch in data[p+1:p+seq_length+1]]
 
 		# sample from the model now and then
-		if n % 5000 == 0:
+		if n % 2500 == 0:
 			sample_ix = sample(hprev, inputs[0], 200)
 			txt = ''.join(ix_to_char[ix] for ix in sample_ix)
-			print txt
-			#print '----\n %s \n----' % (txt, )
+			print '----\n %s \n----' % (txt, )
 
 		# forward seq_length characters through the net and fetch gradient
 		loss, dWxh, dWhh, dWhy, dbh, dby, hprev = lossFun(inputs, targets, hprev)
 		smooth_loss = smooth_loss * 0.999 + loss * 0.001
-		#if n % 5000 == 0: print 'iter %d, loss: %f' % (n, smooth_loss) # print progress
+		if n % 2500 == 0: print 'iter %d, loss: %f' % (n, smooth_loss) # print progress
 	
 		# perform parameter update with Adagrad
 		for param, dparam, mem in zip([Wxh, Whh, Why, bh, by], 
